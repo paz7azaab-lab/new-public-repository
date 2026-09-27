@@ -3,51 +3,90 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ashen Realms — Living Reference Prototype</title>
+<title>Ashen Realms — Kingdom Strategy Prototype</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;background:#071019;color:#fff;font-family:system-ui,sans-serif;min-height:100%;overflow:auto}
-#game{min-height:100vh;display:grid;place-items:center;background:#071019;padding:10px}
-.scene{position:relative;width:min(100vw,1254px);overflow:hidden;background:#111;border-radius:14px;box-shadow:0 20px 70px #000b}
-.scene img{width:100%;height:auto;display:block;user-select:none;-webkit-user-drag:none}
-.hotspot{position:absolute;border:1px solid transparent;background:transparent;border-radius:18px;cursor:pointer}
-.hotspot:active{background:#fff2;box-shadow:0 0 0 2px #fff6 inset}
-#city{left:0;top:33%;width:38%;height:26%}#explore{left:38%;top:33%;width:34%;height:26%}#battle{left:72%;top:33%;width:28%;height:26%}
-#hero{left:0;top:58%;width:37%;height:21%}#inventory{left:37%;top:58%;width:30%;height:21%}#alliances{left:67%;top:58%;width:33%;height:21%}
-#dialogue{left:0;top:79%;width:34%;height:21%}#journey{left:34%;top:79%;width:38%;height:21%}#mobile{left:72%;top:79%;width:28%;height:21%}
-#info{position:absolute;left:12px;right:12px;bottom:12px;display:flex;justify-content:center;pointer-events:none}
-.toast{background:#071019e8;border:1px solid #d9aa55;border-radius:14px;padding:10px 16px;opacity:0;transform:translateY(10px);transition:.2s;text-align:center}
-.toast.show{opacity:1;transform:translateY(0)}
-.overlay{position:absolute;inset:0;background:#06101ae6;display:none;align-items:center;justify-content:center;padding:24px}
-.overlay.show{display:flex}.card{width:min(520px,92vw);background:linear-gradient(145deg,#162737,#0b141d);border:1px solid #c49a50;border-radius:20px;padding:22px;box-shadow:0 20px 60px #000b}.card h2{margin:0 0 10px;color:#f5d38a}.card p{line-height:1.8;color:#d8dde2}.close{float:left;border:1px solid #c49a50;background:#1b2430;color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer}.badge{display:inline-block;padding:6px 10px;border:1px solid #ffffff22;border-radius:10px;margin:3px;font-size:13px}
+*{box-sizing:border-box}body{margin:0;background:#071019;color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{position:relative;overflow:hidden;border:1px solid #9d7941;border-radius:16px;background:#0a121a;box-shadow:0 18px 70px #000b}
+.art{width:100%;display:block}.hud{position:absolute;inset:0;pointer-events:none}
+.top{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;pointer-events:auto}
+.brand,.resources,.phase{background:#071019e8;border:1px solid #c8a15c;border-radius:12px;padding:8px 11px;backdrop-filter:blur(5px)}
+.brand{font-weight:800;color:#f4d38f}.resources{display:flex;gap:12px;flex-wrap:wrap;font-size:13px}.phase{font-size:12px}
+.bottom{position:absolute;bottom:10px;left:10px;right:10px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:auto;justify-content:center}
+.btn{border:1px solid #b58a49;background:#101d29eF;color:#fff;border-radius:11px;padding:9px 12px;cursor:pointer;min-height:42px}.btn:hover{background:#1a2a39}.btn:active{transform:translateY(1px)}
+.hot{position:absolute;border:0;background:transparent;cursor:pointer;border-radius:14px}.hot:focus{outline:2px solid #f5d38a}
+#hCity{left:1%;top:31%;width:37%;height:27%}#hWorld{left:38%;top:31%;width:34%;height:27%}#hBattle{left:72%;top:31%;width:28%;height:27%}
+#hHero{left:1%;top:58%;width:36%;height:20%}#hInv{left:37%;top:58%;width:30%;height:20%}#hAlliance{left:67%;top:58%;width:33%;height:20%}
+.panel{position:fixed;inset:0;background:#050b11d9;display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.panel.show{display:flex}.card{width:min(620px,96vw);max-height:90vh;overflow:auto;background:linear-gradient(145deg,#172635,#0a131c);border:1px solid #c59b53;border-radius:18px;padding:20px;box-shadow:0 25px 70px #000d}.card h2{margin:0 0 7px;color:#f2cf86}.muted{color:#bdc7cf;line-height:1.8}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:12px 0}.tile{background:#0c1721;border:1px solid #ffffff18;border-radius:12px;padding:11px}.tile b{display:block;color:#f0d59b;margin-bottom:4px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.close{float:left}.bar{height:9px;background:#1b2a35;border-radius:99px;overflow:hidden;margin-top:6px}.fill{height:100%;width:70%;background:#c59b53}.log{margin-top:12px;padding:10px;border-radius:10px;background:#071019;border:1px solid #ffffff12;min-height:42px}
+@media(max-width:650px){.resources{font-size:11px;gap:7px}.brand{font-size:12px}.top{align-items:flex-start}.bottom .btn{padding:8px 9px;font-size:12px}}
 </style>
 </head>
 <body>
-<div id="game"><div class="scene">
-<div id="bible" style="position:absolute;top:10px;left:10px;background:#071019d9;border:1px solid #d4ad64;border-radius:12px;padding:7px 10px;font-size:12px;z-index:5">🎨 ART DIRECTION: LOCKED</div>
-
-<img src="https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5e1ebf60e4fb2011301965b7c1d1b755e0d8e781c67864e6e62e6a8d36766ec2.png" alt="Ashen Realms reference">
-<button class="hotspot" id="city" aria-label="شهر"></button><button class="hotspot" id="explore" aria-label="اکتشاف"></button><button class="hotspot" id="battle" aria-label="نبرد"></button>
-<button class="hotspot" id="hero" aria-label="قهرمان"></button><button class="hotspot" id="inventory" aria-label="انبار"></button><button class="hotspot" id="alliances" aria-label="اتحادها"></button>
-<button class="hotspot" id="dialogue" aria-label="گفتگو"></button><button class="hotspot" id="journey" aria-label="سفر"></button><button class="hotspot" id="mobile" aria-label="موبایل"></button>
-<div id="info"><div class="toast" id="toast"></div></div>
-<div class="overlay" id="overlay"><div class="card"><button class="close" id="close">بستن</button><h2 id="title">Ashen Realms</h2><p id="text"></p><div id="badges"></div></div></div>
+<div class="wrap"><div class="game">
+<img class="art" src="https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5e1ebf60e4fb2011301965b7c1d1b755e0d8e781c67864e6e62e6a8d36766ec2.png" alt="Ashen Realms visual reference">
+<div class="hud">
+<div class="top">
+<div class="brand">🔥 ASHEN REALMS <span style="font-weight:400">• Prototype</span></div>
+<div class="resources"><span>🪵 <b id="wood">1200</b></span><span>🪨 <b id="stone">900</b></span><span>🌾 <b id="food">1500</b></span><span>💰 <b id="gold">320</b></span><span>⭐ <b id="honor">0</b></span></div>
+<div class="phase" id="phase">☀️ روز • فصل ۱</div>
+</div>
+<button class="hot" id="hCity" aria-label="شهر"></button><button class="hot" id="hWorld" aria-label="جهان"></button><button class="hot" id="hBattle" aria-label="نبرد"></button>
+<button class="hot" id="hHero" aria-label="قهرمان"></button><button class="hot" id="hInv" aria-label="انبار"></button><button class="hot" id="hAlliance" aria-label="اتحاد"></button>
+<div class="bottom">
+<button class="btn" data-open="city">🏰 شهر</button><button class="btn" data-open="world">🗺️ جهان</button><button class="btn" data-open="pve">🐉 وحش</button><button class="btn" data-open="pvp">⚔️ قلمرو</button><button class="btn" data-open="hero">🧙 قهرمان</button><button class="btn" data-open="alliance">🤝 اتحاد</button><button class="btn" data-open="quest">📜 مأموریت</button>
 </div></div>
+</div></div>
+
+<div class="panel" id="panel"><div class="card">
+<button class="btn close" id="close">بستن</button><h2 id="title"></h2><div id="body"></div><div class="actions" id="actions"></div><div class="log" id="log" aria-live="polite"></div>
+</div></div>
+
 <script>
-const map={
-city:['شهر و قلعه','شهر را توسعه بده، ساختمان‌ها را ارتقا بده و منابع را مدیریت کن.',['🏰 توسعه شهر','🪵 منابع','⬆️ ارتقا']],
-explore:['جهان باز و ماجراجویی','قهرمان برای کشف سرزمین‌های ناشناخته آماده است.',['🧭 اکتشاف','🗺️ نقشه جهان','💎 پاداش']],
-battle:['نبردهای حماسی','نیروها را آماده کن و برای نبردهای بزرگ وارد میدان شو.',['⚔️ ارتش','🔥 نبرد','🏆 پیروزی']],
-hero:['قهرمان','قهرمان خود را ارتقا بده و مهارت‌هایش را توسعه بده.',['🧙 قهرمان','🗡️ تجهیزات','✨ مهارت']],
-inventory:['انبار','منابع و تجهیزات را جمع‌آوری و مدیریت کن.',['💎 آیتم‌ها','🪵 منابع','🛡️ تجهیزات']],
-alliances:['اتحادها و رقابت','با دیگر بازیکنان متحد شو و قلمروها را در نقشه جهان گسترش بده.',['🤝 اتحاد','🗺️ قلمرو','🏆 رتبه‌بندی']],
-dialogue:['شخصیت‌های مختلف','با شخصیت‌های جهان بازی تعامل کن و داستان خودت را بساز.',['💬 گفتگو','📜 داستان','🎭 انتخاب']],
-journey:['هر انتخاب، یک سرنوشت جدید','تصمیم‌های بازیکن باید مسیر جهان را تغییر دهند.',['🌅 سفر','⚖️ انتخاب','✨ پیامد']],
-mobile:['نسخه موبایل','نمونه اولیه از همان تصویر مرجع استفاده می‌کند؛ تعاملات روی خود صحنه قرار گرفته‌اند.',['📱 موبایل','🎮 تعامل','🎨 Art Direction']]
-};
-const overlay=document.getElementById('overlay'),title=document.getElementById('title'),text=document.getElementById('text'),badges=document.getElementById('badges'),toast=document.getElementById('toast');
-function openPanel(k){const d=map[k];title.textContent=d[0];text.textContent=d[1];badges.innerHTML=d[2].map(x=>'<span class="badge">'+x+'</span>').join('');overlay.classList.add('show')}
-document.querySelectorAll('.hotspot').forEach(b=>b.addEventListener('click',()=>openPanel(b.id)));
-document.getElementById('close').onclick=()=>overlay.classList.remove('show');
-overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('show')});
+const state={wood:1200,stone:900,food:1500,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false};
+const $=id=>document.getElementById(id);
+function render(){['wood','stone','food','gold','honor'].forEach(k=>$(k).textContent=state[k]);$('phase').textContent=(state.night?'🌙 شب':'☀️ روز')+' • فصل ۱';}
+function spend(cost){for(const k in cost)if(state[k]<cost[k])return false;for(const k in cost)state[k]-=cost[k];return true}
+function show(kind){
+ const data={
+ city:['🏰 شهر و قلعه','پایتخت تو مرکز اقتصاد و دفاع است. ساختمان‌ها را ارتقا بده و تولید منابع را بیشتر کن.'],
+ world:['🗺️ جهان','قلمروها، مناطق ناشناخته و مسیرهای اکتشاف را بررسی کن. قلمروها در این نسخه قابل تصرف و ادغام هستند.'],
+ pve:['🐉 نبرد با وحش','یک موجود قدرتمند در منطقه ظاهر شده است. پیروزی پاداش می‌دهد و انرژی مصرف می‌کند.'],
+ pvp:['⚔️ رقابت قلمروها','برای نسخه آنلاین، این بخش به سرور متصل می‌شود. این نمونه فقط شبیه‌سازی محلی دارد.'],
+ hero:['🧙 قهرمان','قهرمان را ارتقا بده، انرژی را مدیریت کن و سبک توانایی‌هایش را تغییر بده.'],
+ alliance:['🤝 اتحاد','اتحاد بساز، اعضا را سازمان بده و در رویدادهای گروهی امتیاز بگیر.'],
+ quest:['📜 مأموریت و انتخاب','انتخاب‌های تو می‌توانند پاداش، شهرت و مسیر رویداد بعدی را تغییر دهند.']
+ };
+ $('title').textContent=data[kind][0];$('body').innerHTML='<p class="muted">'+data[kind][1]+'</p>';
+ $('actions').innerHTML='';$('log').textContent='آماده‌ای.';
+ if(kind==='city'){
+  $('body').innerHTML+='<div class="grid"><div class="tile"><b>سطح قلعه</b>'+state.castle+'</div><div class="tile"><b>تولید</b>منابع پایدار</div><div class="tile"><b>دفاع</b>در حال آماده‌سازی</div></div><div class="bar"><div class="fill" style="width:'+Math.min(100,state.castle*12)+'%"></div></div>';
+  action('⬆️ ارتقای قلعه',()=>{if(spend({wood:300,stone:250,gold:50})){state.castle++;state.honor+=5;render();msg('قلعه ارتقا یافت و ۵ شهرت گرفتی.')}else msg('منابع کافی نیست.');});
+  action('🌾 جمع‌آوری منابع',()=>{state.food+=250;state.wood+=180;state.stone+=120;render();msg('منابع جمع‌آوری شد.');});
+ }else if(kind==='world'){
+  action('🧭 اکتشاف',()=>{if(spend({food:120})){state.honor+=8;render();msg('منطقه جدید کشف شد؛ ۸ شهرت به دست آمد.')}else msg('غذای کافی نیست.');});
+  action('🧩 ادغام قلمرو',()=>{if(state.territories>0){state.territories++;state.honor+=12;render();msg('یک قلمرو در نقشه نمونه با قلمرو تو ادغام شد.');}});
+ }else if(kind==='pve'){
+  action('✨ شروع رویارویی',()=>{if(state.energy>=20){state.energy-=20;state.gold+=90;state.honor+=15;render();msg('رویارویی با موفقیت شبیه‌سازی شد؛ ۹۰ طلا و ۱۵ شهرت گرفتی.')}else msg('انرژی کافی نیست.');});
+  action('🔋 بازیابی انرژی',()=>{state.energy=Math.min(100,state.energy+30);render();msg('انرژی بازیابی شد.');});
+ }else if(kind==='pvp'){
+  action('🛡️ تقویت دفاع',()=>{if(spend({stone:180,gold:30})){state.honor+=6;render();msg('دفاع قلمرو تقویت شد.')}else msg('منابع کافی نیست.');});
+  action('🏳️ اعزام برای رقابت',()=>{if(spend({food:180,wood:120})){state.honor+=10;render();msg('اعزام شبیه‌سازی شد؛ ۱۰ شهرت گرفتی.')}else msg('منابع کافی نیست.');});
+ }else if(kind==='hero'){
+  $('body').innerHTML+='<div class="grid"><div class="tile"><b>سطح</b>'+state.hero+'</div><div class="tile"><b>انرژی</b>'+state.energy+'/100</div><div class="tile"><b>سبک</b>قهرمان آزاد</div></div>';
+  action('⬆️ ارتقای قهرمان',()=>{if(spend({gold:120})){state.hero++;state.honor+=4;render();msg('قهرمان به سطح '+state.hero+' رسید.')}else msg('طلا کافی نیست.');});
+ }else if(kind==='alliance'){
+  action(state.alliance?'✅ اتحاد فعال':'🤝 ساخت اتحاد',()=>{state.alliance=true;state.honor+=10;render();msg('اتحاد فعال شد؛ رویدادهای گروهی آماده‌اند.');});
+ }else if(kind==='quest'){
+  action('🌅 انتخاب صلح',()=>{state.food+=250;state.honor+=5;render();msg('پاداش صلح: ۲۵۰ غذا و ۵ شهرت.');});
+  action('🔥 انتخاب ریسک',()=>{state.gold+=140;state.honor+=12;render();msg('پاداش ریسک: ۱۴۰ طلا و ۱۲ شهرت.');});
+ }
+ $('panel').classList.add('show');
+}
+function action(label,fn){const b=document.createElement('button');b.className='btn';b.textContent=label;b.type='button';b.onclick=fn;$('actions').appendChild(b)}
+function msg(t){$('log').textContent=t}
+document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.open)));
+[['hCity','city'],['hWorld','world'],['hBattle','pve'],['hHero','hero'],['hInv','city'],['hAlliance','alliance']].forEach(([id,k])=>$(id).addEventListener('click',()=>show(k)));
+$('close').onclick=()=>$('panel').classList.remove('show');
+$('panel').addEventListener('click',e=>{if(e.target===$('panel'))$('panel').classList.remove('show')});
+render();
 </script>
 </body></html>
