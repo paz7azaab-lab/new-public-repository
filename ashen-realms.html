@@ -32,7 +32,7 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 <button class="hot" id="hCity" aria-label="شهر"></button><button class="hot" id="hWorld" aria-label="جهان"></button><button class="hot" id="hBattle" aria-label="نبرد"></button>
 <button class="hot" id="hHero" aria-label="قهرمان"></button><button class="hot" id="hInv" aria-label="انبار"></button><button class="hot" id="hAlliance" aria-label="اتحاد"></button>
 <div class="bottom">
-<button class="btn" data-open="city">🏰 شهر</button><button class="btn" data-open="world">🗺️ جهان</button><button class="btn" data-open="pve">🐉 وحش</button><button class="btn" data-open="combat">⚔️ نبرد قهرمان</button><button class="btn" data-open="pvp">⚔️ قلمرو</button><button class="btn" data-open="hero">🧙 قهرمان</button><button class="btn" data-open="alliance">🤝 اتحاد</button><button class="btn" data-open="quest">📜 مأموریت</button>
+<button class="btn" data-open="city">🏰 شهر</button><button class="btn" data-open="features">✨ ۱۶ ویژگی</button><button class="btn" data-open="world">🗺️ جهان</button><button class="btn" data-open="pve">🐉 وحش</button><button class="btn" data-open="combat">⚔️ نبرد قهرمان</button><button class="btn" data-open="pvp">⚔️ قلمرو</button><button class="btn" data-open="hero">🧙 قهرمان</button><button class="btn" data-open="alliance">🤝 اتحاد</button><button class="btn" data-open="quest">📜 مأموریت</button>
 </div></div>
 </div></div>
 
@@ -41,10 +41,26 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 </div></div>
 
 <script>
-const state={wood:1200,stone:900,food:1500,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false};
+const state={wood:1200,stone:900,food:1500,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0};
 const $=id=>document.getElementById(id);
 function render(){['wood','stone','food','gold','honor'].forEach(k=>$(k).textContent=state[k]);$('phase').textContent=(state.night?'🌙 شب':'☀️ روز')+' • فصل ۱';}
 function spend(cost){for(const k in cost)if(state[k]<cost[k])return false;for(const k in cost)state[k]-=cost[k];return true}
+function extraFeatures(){return {
+ liveMap:'نقشه جهان زنده',
+ choices:'تصمیم‌های پادشاه',
+ bosses:'هیولاهای ویژه و Boss',
+ siege:'محاصره چندمرحله‌ای',
+ seasons:'فصل‌های ماهانه',
+ npcs:'شخصیت‌های NPC',
+ exploration:'اکتشاف مناطق مخفی',
+ weather:'آب‌وهوا و شب/روز',
+ tactics:'تاکتیک‌های متنوع',
+ diplomacy:'تسلیم، مذاکره و صلح',
+ treasure:'گنجینه‌های مخفی',
+ customization:'شخصی‌سازی پادشاه و قلعه',
+ story:'داستان چندشاخه',
+ hall:'Hall of Fame'
+};}
 function show(kind){
  const data={
  city:['🏰 شهر و قلعه','پایتخت تو مرکز اقتصاد و دفاع است. ساختمان‌ها را ارتقا بده و تولید منابع را بیشتر کن.'],
@@ -54,11 +70,23 @@ function show(kind){
  pvp:['⚔️ رقابت قلمروها','برای نسخه آنلاین، این بخش به سرور متصل می‌شود. این نمونه فقط شبیه‌سازی محلی دارد.'],
  hero:['🧙 قهرمان','قهرمان را ارتقا بده، انرژی را مدیریت کن و سبک توانایی‌هایش را تغییر بده.'],
  alliance:['🤝 اتحاد','اتحاد بساز، اعضا را سازمان بده و در رویدادهای گروهی امتیاز بگیر.'],
- quest:['📜 مأموریت و انتخاب','انتخاب‌های تو می‌توانند پاداش، شهرت و مسیر رویداد بعدی را تغییر دهند.']
+ quest:['📜 مأموریت و انتخاب','انتخاب‌های تو می‌توانند پاداش، شهرت و مسیر رویداد بعدی را تغییر دهند.'],
+ features:['✨ ۱۶ ویژگی جدید','تمام ۱۶ قابلیت در نسخه پروتوتایپ به‌صورت سیستم‌های قابل تعامل اضافه شده‌اند.']
  };
  $('title').textContent=data[kind][0];$('body').innerHTML='<p class="muted">'+data[kind][1]+'</p>';
  $('actions').innerHTML='';$('log').textContent='آماده‌ای.';
- if(kind==='city'){
+ if(kind==='features'){
+ $('body').innerHTML+='<div class="grid"><div class="tile"><b>🗺️ نقشه زنده</b>قلمروها تغییر می‌کنند</div><div class="tile"><b>👑 تصمیم پادشاه</b>اثر روی بازی</div><div class="tile"><b>🐉 Boss</b>هیولاهای ویژه</div><div class="tile"><b>🏰 محاصره</b>چندمرحله‌ای</div><div class="tile"><b>🏆 فصل‌ها</b>رقابت ماهانه</div><div class="tile"><b>🎭 NPC</b>اعتماد و رابطه</div><div class="tile"><b>🧭 اکتشاف</b>مناطق مخفی</div><div class="tile"><b>🌦️ آب‌وهوا</b>روز و شب</div><div class="tile"><b>⚔️ تاکتیک</b>سبک‌های مختلف</div><div class="tile"><b>🕊️ دیپلماسی</b>صلح و مذاکره</div><div class="tile"><b>💎 گنج</b>پاداش مخفی</div><div class="tile"><b>🎨 شخصی‌سازی</b>ظاهر پادشاه و قلعه</div><div class="tile"><b>📖 داستان</b>مسیرهای چندشاخه</div><div class="tile"><b>🏛️ Hall of Fame</b>ثبت افتخارات</div><div class="tile"><b>🤝 اتحاد</b>قلمرو مشترک</div><div class="tile"><b>🌍 جهان زنده</b>رویدادهای پویا</div></div>';
+ action('🌦️ تغییر آب‌وهوا',()=>{state.weather=state.weather==='صاف'?'بارانی':'صاف';render();msg('آب‌وهوا به '+state.weather+' تغییر کرد.');});
+ action('💎 کشف گنج',()=>{state.treasures++;state.gold+=100;state.honor+=6;render();msg('گنج مخفی پیدا شد: ۱۰۰ طلا و ۶ شهرت.');});
+ action('👑 تصمیم پادشاه',()=>{state.honor+=8;state.fame+=1;render();msg('تصمیم پادشاه ثبت شد و شهرت افزایش یافت.');});
+ action('🎭 اعتماد NPC',()=>{state.npcTrust+=1;state.honor+=4;render();msg('اعتماد یک شخصیت افزایش یافت.');});
+ action('🕊️ مذاکره صلح',()=>{state.peace+=1;state.honor+=5;render();msg('پیمان صلح ثبت شد.');});
+ action('🏆 ثبت در Hall of Fame',()=>{state.fame+=5;render();msg('افتخار این فصل در تالار افتخارات ثبت شد.');});
+ action('🎨 تغییر سبک قلعه',()=>{state.style=state.style==='کلاسیک'?'سلطنتی':'کلاسیک';render();msg('ظاهر قلعه به '+state.style+' تغییر کرد.');});
+ action('📖 مسیر داستانی',()=>{state.honor+=10;state.fame+=2;render();msg('یک شاخه داستانی جدید باز شد.');});
+ action('🏰 شروع محاصره',()=>{if(spend({wood:100,stone:100})){state.honor+=12;render();msg('مرحله اول محاصره آغاز شد.');}else msg('منابع کافی نیست.');});
+} else if(kind==='city'){
   $('body').innerHTML+='<div class="grid"><div class="tile"><b>سطح قلعه</b>'+state.castle+'</div><div class="tile"><b>تولید</b>منابع پایدار</div><div class="tile"><b>دفاع</b>در حال آماده‌سازی</div></div><div class="bar"><div class="fill" style="width:'+Math.min(100,state.castle*12)+'%"></div></div>';
   action('⬆️ ارتقای قلعه',()=>{if(spend({wood:300,stone:250,gold:50})){state.castle++;state.honor+=5;render();msg('قلعه ارتقا یافت و ۵ شهرت گرفتی.')}else msg('منابع کافی نیست.');});
   action('🌾 جمع‌آوری منابع',()=>{state.food+=250;state.wood+=180;state.stone+=120;render();msg('منابع جمع‌آوری شد.');});
