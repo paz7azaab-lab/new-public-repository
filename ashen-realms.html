@@ -32,7 +32,7 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 <button class="hot" id="hCity" aria-label="شهر"></button><button class="hot" id="hWorld" aria-label="جهان"></button><button class="hot" id="hBattle" aria-label="نبرد"></button>
 <button class="hot" id="hHero" aria-label="قهرمان"></button><button class="hot" id="hInv" aria-label="انبار"></button><button class="hot" id="hAlliance" aria-label="اتحاد"></button>
 <div class="bottom">
-<button class="btn" data-open="city">🏰 شهر</button><button class="btn" data-open="world">🗺️ جهان</button><button class="btn" data-open="pve">🐉 وحش</button><button class="btn" data-open="pvp">⚔️ قلمرو</button><button class="btn" data-open="hero">🧙 قهرمان</button><button class="btn" data-open="alliance">🤝 اتحاد</button><button class="btn" data-open="quest">📜 مأموریت</button>
+<button class="btn" data-open="city">🏰 شهر</button><button class="btn" data-open="world">🗺️ جهان</button><button class="btn" data-open="pve">🐉 وحش</button><button class="btn" data-open="combat">⚔️ نبرد قهرمان</button><button class="btn" data-open="pvp">⚔️ قلمرو</button><button class="btn" data-open="hero">🧙 قهرمان</button><button class="btn" data-open="alliance">🤝 اتحاد</button><button class="btn" data-open="quest">📜 مأموریت</button>
 </div></div>
 </div></div>
 
@@ -50,6 +50,7 @@ function show(kind){
  city:['🏰 شهر و قلعه','پایتخت تو مرکز اقتصاد و دفاع است. ساختمان‌ها را ارتقا بده و تولید منابع را بیشتر کن.'],
  world:['🗺️ جهان','قلمروها، مناطق ناشناخته و مسیرهای اکتشاف را بررسی کن. قلمروها در این نسخه قابل تصرف و ادغام هستند.'],
  pve:['🐉 نبرد با وحش','یک موجود قدرتمند در منطقه ظاهر شده است. پیروزی پاداش می‌دهد و انرژی مصرف می‌کند.'],
+ combat:['⚔️ میدان نبرد مستقیم','قهرمان می‌تواند در نبرد دفاعی یا تهاجمی به‌صورت مستقیم کنترل شود. تجهیزات و واحدهای همراه، نقش‌های متفاوت دارند.'],
  pvp:['⚔️ رقابت قلمروها','برای نسخه آنلاین، این بخش به سرور متصل می‌شود. این نمونه فقط شبیه‌سازی محلی دارد.'],
  hero:['🧙 قهرمان','قهرمان را ارتقا بده، انرژی را مدیریت کن و سبک توانایی‌هایش را تغییر بده.'],
  alliance:['🤝 اتحاد','اتحاد بساز، اعضا را سازمان بده و در رویدادهای گروهی امتیاز بگیر.'],
@@ -67,6 +68,13 @@ function show(kind){
  }else if(kind==='pve'){
   action('✨ شروع رویارویی',()=>{if(state.energy>=20){state.energy-=20;state.gold+=90;state.honor+=15;render();msg('رویارویی با موفقیت شبیه‌سازی شد؛ ۹۰ طلا و ۱۵ شهرت گرفتی.')}else msg('انرژی کافی نیست.');});
   action('🔋 بازیابی انرژی',()=>{state.energy=Math.min(100,state.energy+30);render();msg('انرژی بازیابی شد.');});
+ }else if(kind==='combat'){
+  $('body').innerHTML+='<div class="grid"><div class="tile"><b>🗡️ مبارز نزدیک</b>حملات نزدیک</div><div class="tile"><b>🏹 کماندار</b>حملات دوربرد</div><div class="tile"><b>🛡️ مدافع</b>حفاظت از موقعیت</div><div class="tile"><b>🐎 سواره</b>حرکت سریع</div><div class="tile"><b>🪨 منجنیق</b>واحد محاصره</div><div class="tile"><b>🛡️ سپر</b>دفاع گروهی</div><div class="tile"><b>🏇 ارابه</b>واحد متحرک</div><div class="tile"><b>🤝 دوستان</b>پیوستن متحدان</div></div>';
+  action('🏹 تمرین حمله دوربرد',()=>{state.energy=Math.max(0,state.energy-5);state.honor+=3;render();msg('تمرین موفق: ۳ شهرت.');});
+  action('🛡️ دفاع از شهر',()=>{if(spend({stone:80})){state.honor+=7;render();msg('دفاع تقویت شد؛ ۷ شهرت.')}else msg('سنگ کافی نیست.');});
+  action('🐎 انتخاب سواره',()=>{state.honor+=4;render();msg('واحد سواره برای این نبرد انتخاب شد.');});
+  action('🪨 آماده‌سازی محاصره',()=>{if(spend({wood:120,stone:120})){state.honor+=8;render();msg('واحد محاصره آماده شد؛ ۸ شهرت.')}else msg('منابع کافی نیست.');});
+  action('🤝 دعوت دوستان',()=>{state.alliance=true;state.honor+=10;render();msg('دعوت متحدان ثبت شد؛ در نسخه آنلاین دوستان می‌توانند به نبرد مشترک بپیوندند.');});
  }else if(kind==='pvp'){
   action('🛡️ تقویت دفاع',()=>{if(spend({stone:180,gold:30})){state.honor+=6;render();msg('دفاع قلمرو تقویت شد.')}else msg('منابع کافی نیست.');});
   action('🏳️ اعزام برای رقابت',()=>{if(spend({food:180,wood:120})){state.honor+=10;render();msg('اعزام شبیه‌سازی شد؛ ۱۰ شهرت گرفتی.')}else msg('منابع کافی نیست.');});
@@ -84,7 +92,7 @@ function show(kind){
 function action(label,fn){const b=document.createElement('button');b.className='btn';b.textContent=label;b.type='button';b.onclick=fn;$('actions').appendChild(b)}
 function msg(t){$('log').textContent=t}
 document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.open)));
-[['hCity','city'],['hWorld','world'],['hBattle','pve'],['hHero','hero'],['hInv','city'],['hAlliance','alliance']].forEach(([id,k])=>$(id).addEventListener('click',()=>show(k)));
+[['hCity','city'],['hWorld','world'],['hBattle','combat'],['hHero','hero'],['hInv','city'],['hAlliance','alliance']].forEach(([id,k])=>$(id).addEventListener('click',()=>show(k)));
 $('close').onclick=()=>$('panel').classList.remove('show');
 $('panel').addEventListener('click',e=>{if(e.target===$('panel'))$('panel').classList.remove('show')});
 render();
