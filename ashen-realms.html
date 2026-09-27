@@ -32,7 +32,7 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 <button class="hot" id="hCity" aria-label="شهر"></button><button class="hot" id="hWorld" aria-label="جهان"></button><button class="hot" id="hBattle" aria-label="نبرد"></button>
 <button class="hot" id="hHero" aria-label="قهرمان"></button><button class="hot" id="hInv" aria-label="انبار"></button><button class="hot" id="hAlliance" aria-label="اتحاد"></button>
 <div class="bottom">
-<button class="btn" data-open="city">🏰 شهر</button><button class="btn" data-open="world">🗺️ جهان</button><button class="btn" data-open="pve">🐉 وحش</button><button class="btn" data-open="combat">⚔️ نبرد قهرمان</button><button class="btn" data-open="pvp">⚔️ قلمرو</button><button class="btn" data-open="hero">🧙 قهرمان</button><button class="btn" data-open="alliance">🤝 اتحاد</button><button class="btn" data-open="quest">📜 مأموریت</button>
+<button class="btn" data-open="city">🏰 شهر</button><button class="btn" data-open="world">🗺️ جهان</button><button class="btn" data-open="pve">🐉 وحش</button><button class="btn" data-open="combat">⚔️ نبرد قهرمان</button><button class="btn" data-open="pvp">⚔️ قلمرو</button><button class="btn" data-open="hero">🧙 قهرمان</button><button class="btn" data-open="alliance">🤝 اتحاد</button><button class="btn" data-open="quest">📜 مأموریت</button><button class="btn" data-open="shop">🛍️ فروشگاه</button>
 </div></div>
 </div></div>
 
@@ -41,7 +41,7 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 </div></div>
 
 <script>
-const state={wood:1200,stone:900,food:1500,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0};
+const state={wood:1200,stone:900,food:1500,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0,pass:false,vip:false,skins:0,seasonTokens:0,invites:0,eventTickets:0,loginDays:1};
 const $=id=>document.getElementById(id);
 function render(){['wood','stone','food','gold','honor'].forEach(k=>$(k).textContent=state[k]);$('phase').textContent=(state.night?'🌙 شب':'☀️ روز')+' • فصل ۱';}
 function spend(cost){for(const k in cost)if(state[k]<cost[k])return false;for(const k in cost)state[k]-=cost[k];return true}
@@ -71,6 +71,7 @@ function show(kind){
  hero:['🧙 قهرمان','قهرمان را ارتقا بده، انرژی را مدیریت کن و سبک توانایی‌هایش را تغییر بده.'],
  alliance:['🤝 اتحاد','اتحاد بساز، اعضا را سازمان بده و در رویدادهای گروهی امتیاز بگیر.'],
  quest:['📜 مأموریت و انتخاب','انتخاب‌های تو می‌توانند پاداش، شهرت و مسیر رویداد بعدی را تغییر دهند.'],
+ shop:['🛍️ فروشگاه','آیتم‌های ظاهری و بسته‌های اختیاری.'],
  features:['✨ ۱۶ ویژگی جدید','تمام ۱۶ قابلیت در نسخه پروتوتایپ به‌صورت سیستم‌های قابل تعامل اضافه شده‌اند.']
  };
  $('title').textContent=data[kind][0];$('body').innerHTML='<p class="muted">'+data[kind][1]+'</p>';
@@ -113,7 +114,19 @@ function show(kind){
   action('⬆️ ارتقای قهرمان',()=>{if(spend({gold:120})){state.hero++;state.honor+=4;render();msg('قهرمان به سطح '+state.hero+' رسید.')}else msg('طلا کافی نیست.');});
  }else if(kind==='alliance'){
   action(state.alliance?'✅ اتحاد فعال':'🤝 ساخت اتحاد',()=>{state.alliance=true;state.honor+=10;render();msg('اتحاد فعال شد؛ رویدادهای گروهی آماده‌اند.');});
- }else if(kind==='quest'){
+ }else if(kind==='shop'){
+ $('body').innerHTML+='<div class="grid"><div class="tile"><b>🎟️ Season Pass</b>پاداش‌های فصلی</div><div class="tile"><b>👑 Royal Pass</b>مأموریت‌های ویژه</div><div class="tile"><b>🎨 فروشگاه ظاهری</b>اسکین و تزئینات</div><div class="tile"><b>📺 تبلیغ اختیاری</b>پاداش انتخابی</div><div class="tile"><b>🏆 فروشگاه فصل</b>آیتم‌های فصلی</div><div class="tile"><b>🤝 بسته اتحاد</b>امکانات اجتماعی</div><div class="tile"><b>🐉 رویداد محدود</b>جایزه ویژه</div><div class="tile"><b>⭐ VIP</b>امکانات رفاهی</div><div class="tile"><b>🎟️ بلیت رویداد</b>ورود به رویداد</div><div class="tile"><b>📅 ورود ۳۰روزه</b>پاداش روزانه</div></div>';
+ action('🎟️ فعال‌سازی Season Pass',()=>{state.pass=true;state.seasonTokens+=20;render();msg('Season Pass فعال شد؛ ۲۰ توکن فصل دریافت شد.');});
+ action('🎨 دریافت آیتم ظاهری',()=>{state.skins++;render();msg('یک آیتم ظاهری جدید به مجموعه اضافه شد.');});
+ action('📺 تماشای تبلیغ اختیاری',()=>{state.gold+=35;state.seasonTokens+=3;render();msg('پاداش تبلیغ اختیاری: ۳۵ طلا و ۳ توکن فصل.');});
+ action('🏆 فروشگاه فصل',()=>{if(state.seasonTokens>=5){state.seasonTokens-=5;state.skins++;render();msg('یک آیتم فصلی دریافت شد.');}else msg('توکن فصل کافی نیست.');});
+ action('⭐ فعال‌سازی VIP',()=>{state.vip=true;state.honor+=5;render();msg('VIP آزمایشی فعال شد؛ فقط امکانات رفاهی دارد.');});
+ action('🤝 بسته اتحاد',()=>{state.alliance=true;state.honor+=6;render();msg('محتوای اجتماعی اتحاد فعال شد.');});
+ action('🐉 بلیت رویداد',()=>{if(state.eventTickets<3){state.eventTickets++;state.honor+=4;render();msg('یک بلیت رویداد دریافت شد.');}else msg('سقف بلیت این رویداد پر شده است.');});
+ action('📅 پاداش ورود امروز',()=>{state.loginDays++;state.gold+=20;render();msg('پاداش ورود امروز دریافت شد.');});
+ action('👥 دعوت دوستان',()=>{state.invites++;state.honor+=3;render();msg('دعوت ثبت شد؛ در نسخه آنلاین پاداش دعوت اعمال می‌شود.');});
+ action('🎁 بسته مناسبتی',()=>{state.gold+=50;state.seasonTokens+=5;render();msg('بسته مناسبتی نمونه دریافت شد.');});
+}else if(kind==='quest'){
   action('🌅 انتخاب صلح',()=>{state.food+=250;state.honor+=5;render();msg('پاداش صلح: ۲۵۰ غذا و ۵ شهرت.');});
   action('🔥 انتخاب ریسک',()=>{state.gold+=140;state.honor+=12;render();msg('پاداش ریسک: ۱۴۰ طلا و ۱۲ شهرت.');});
  }
