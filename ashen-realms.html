@@ -32,7 +32,7 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 <button class="hot" id="hCity" aria-label="شهر"></button><button class="hot" id="hWorld" aria-label="جهان"></button><button class="hot" id="hBattle" aria-label="نبرد"></button>
 <button class="hot" id="hHero" aria-label="قهرمان"></button><button class="hot" id="hInv" aria-label="انبار"></button><button class="hot" id="hAlliance" aria-label="اتحاد"></button>
 <div class="bottom">
-<button class="btn" data-open="city">🏰 شهر</button><button class="btn" data-open="world">🗺️ جهان</button><button class="btn" data-open="pve">🐉 وحش</button><button class="btn" data-open="combat">⚔️ نبرد قهرمان</button><button class="btn" data-open="pvp">⚔️ قلمرو</button><button class="btn" data-open="hero">🧙 قهرمان</button><button class="btn" data-open="alliance">🤝 اتحاد</button><button class="btn" data-open="quest">📜 مأموریت</button><button class="btn" data-open="shop">🛍️ فروشگاه</button>
+<button class="btn" data-open="city">🏰 شهر</button><button class="btn" data-open="world">🗺️ جهان</button><button class="btn" data-open="pve">🐉 وحش</button><button class="btn" data-open="combat">⚔️ نبرد قهرمان</button><button class="btn" data-open="pvp">⚔️ قلمرو</button><button class="btn" data-open="hero">🧙 قهرمان</button><button class="btn" data-open="alliance">🤝 اتحاد</button><button class="btn" data-open="quest">📜 مأموریت</button><button class="btn" data-open="shop">🛍️ فروشگاه</button><button class="btn" data-open="settings">⚙️ تنظیمات</button>
 </div></div>
 </div></div>
 
@@ -72,6 +72,7 @@ function show(kind){
  alliance:['🤝 اتحاد','اتحاد بساز، اعضا را سازمان بده و در رویدادهای گروهی امتیاز بگیر.'],
  quest:['📜 مأموریت و انتخاب','انتخاب‌های تو می‌توانند پاداش، شهرت و مسیر رویداد بعدی را تغییر دهند.'],
  shop:['🛍️ فروشگاه','آیتم‌های ظاهری و بسته‌های اختیاری.'],
+ settings:['⚙️ تنظیمات','تنظیمات بازی، صدا، اعلان‌ها، کیفیت تصویر و کنترل‌ها.'],
  features:['✨ ۱۶ ویژگی جدید','تمام ۱۶ قابلیت در نسخه پروتوتایپ به‌صورت سیستم‌های قابل تعامل اضافه شده‌اند.']
  };
  $('title').textContent=data[kind][0];$('body').innerHTML='<p class="muted">'+data[kind][1]+'</p>';
@@ -114,7 +115,15 @@ function show(kind){
   action('⬆️ ارتقای قهرمان',()=>{if(spend({gold:120})){state.hero++;state.honor+=4;render();msg('قهرمان به سطح '+state.hero+' رسید.')}else msg('طلا کافی نیست.');});
  }else if(kind==='alliance'){
   action(state.alliance?'✅ اتحاد فعال':'🤝 ساخت اتحاد',()=>{state.alliance=true;state.honor+=10;render();msg('اتحاد فعال شد؛ رویدادهای گروهی آماده‌اند.');});
- }else if(kind==='shop'){
+ }else if(kind==='settings'){
+ $('body').innerHTML+='<div class="grid"><div class="tile"><b>🔊 صدا</b><span id="soundStatus">روشن</span></div><div class="tile"><b>🔔 اعلان‌ها</b><span id="notifyStatus">روشن</span></div><div class="tile"><b>🎨 کیفیت تصویر</b><span id="qualityStatus">بالا</span></div><div class="tile"><b>🎮 کنترل‌ها</b>استاندارد</div><div class="tile"><b>🌐 زبان</b>فارسی</div><div class="tile"><b>📱 حالت نمایش</b>تمام‌صفحه</div></div>';
+ action('🔊 روشن/خاموش کردن صدا',()=>{const e=$('soundStatus');e.textContent=e.textContent==='روشن'?'خاموش':'روشن';msg('تنظیم صدا ذخیره شد.');});
+ action('🔔 اعلان‌ها',()=>{const e=$('notifyStatus');e.textContent=e.textContent==='روشن'?'خاموش':'روشن';msg('تنظیم اعلان‌ها ذخیره شد.');});
+ action('🎨 تغییر کیفیت تصویر',()=>{const e=$('qualityStatus');e.textContent=e.textContent==='بالا'?'متوسط':'بالا';msg('کیفیت تصویر تغییر کرد.');});
+ action('🌐 انتخاب زبان',()=>{msg('بخش انتخاب زبان آماده توسعه برای زبان‌های بیشتر است.');});
+ action('🎮 تنظیم کنترل‌ها',()=>{msg('کنترل‌های بازی قابل شخصی‌سازی هستند.');});
+ action('🔒 حریم خصوصی',()=>{msg('تنظیمات حریم خصوصی و حساب در این بخش قرار می‌گیرد.');});
+}else if(kind==='shop'){
  $('body').innerHTML+='<div class="grid"><div class="tile"><b>🎟️ Season Pass</b>پاداش‌های فصلی</div><div class="tile"><b>👑 Royal Pass</b>مأموریت‌های ویژه</div><div class="tile"><b>🎨 فروشگاه ظاهری</b>اسکین و تزئینات</div><div class="tile"><b>📺 تبلیغ اختیاری</b>پاداش انتخابی</div><div class="tile"><b>🏆 فروشگاه فصل</b>آیتم‌های فصلی</div><div class="tile"><b>🤝 بسته اتحاد</b>امکانات اجتماعی</div><div class="tile"><b>🐉 رویداد محدود</b>جایزه ویژه</div><div class="tile"><b>⭐ VIP</b>امکانات رفاهی</div><div class="tile"><b>🎟️ بلیت رویداد</b>ورود به رویداد</div><div class="tile"><b>📅 ورود ۳۰روزه</b>پاداش روزانه</div></div>';
  action('🎟️ فعال‌سازی Season Pass',()=>{state.pass=true;state.seasonTokens+=20;render();msg('Season Pass فعال شد؛ ۲۰ توکن فصل دریافت شد.');});
  action('🎨 دریافت آیتم ظاهری',()=>{state.skins++;render();msg('یک آیتم ظاهری جدید به مجموعه اضافه شد.');});
