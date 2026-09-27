@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ashen Realms — Living Reference Prototype</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;background:#071019;color:#fff;font-family:system-ui,sans-serif;min-height:100%;overflow:auto}
+#game{min-height:100vh;display:grid;place-items:center;background:#071019;padding:10px}
+.scene{position:relative;width:min(100vw,1254px);overflow:hidden;background:#111;border-radius:14px;box-shadow:0 20px 70px #000b}
+.scene img{width:100%;height:auto;display:block;user-select:none;-webkit-user-drag:none}
+.hotspot{position:absolute;border:1px solid transparent;background:transparent;border-radius:18px;cursor:pointer}
+.hotspot:active{background:#fff2;box-shadow:0 0 0 2px #fff6 inset}
+#city{left:0;top:33%;width:38%;height:26%}#explore{left:38%;top:33%;width:34%;height:26%}#battle{left:72%;top:33%;width:28%;height:26%}
+#hero{left:0;top:58%;width:37%;height:21%}#inventory{left:37%;top:58%;width:30%;height:21%}#alliances{left:67%;top:58%;width:33%;height:21%}
+#dialogue{left:0;top:79%;width:34%;height:21%}#journey{left:34%;top:79%;width:38%;height:21%}#mobile{left:72%;top:79%;width:28%;height:21%}
+#info{position:absolute;left:12px;right:12px;bottom:12px;display:flex;justify-content:center;pointer-events:none}
+.toast{background:#071019e8;border:1px solid #d9aa55;border-radius:14px;padding:10px 16px;opacity:0;transform:translateY(10px);transition:.2s;text-align:center}
+.toast.show{opacity:1;transform:translateY(0)}
+.overlay{position:absolute;inset:0;background:#06101ae6;display:none;align-items:center;justify-content:center;padding:24px}
+.overlay.show{display:flex}.card{width:min(520px,92vw);background:linear-gradient(145deg,#162737,#0b141d);border:1px solid #c49a50;border-radius:20px;padding:22px;box-shadow:0 20px 60px #000b}.card h2{margin:0 0 10px;color:#f5d38a}.card p{line-height:1.8;color:#d8dde2}.close{float:left;border:1px solid #c49a50;background:#1b2430;color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer}.badge{display:inline-block;padding:6px 10px;border:1px solid #ffffff22;border-radius:10px;margin:3px;font-size:13px}
+</style>
+</head>
+<body>
+<div id="game"><div class="scene">
+<img src="https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5e1ebf60e4fb2011301965b7c1d1b755e0d8e781c67864e6e62e6a8d36766ec2.png" alt="Ashen Realms reference">
+<button class="hotspot" id="city" aria-label="شهر"></button><button class="hotspot" id="explore" aria-label="اکتشاف"></button><button class="hotspot" id="battle" aria-label="نبرد"></button>
+<button class="hotspot" id="hero" aria-label="قهرمان"></button><button class="hotspot" id="inventory" aria-label="انبار"></button><button class="hotspot" id="alliances" aria-label="اتحادها"></button>
+<button class="hotspot" id="dialogue" aria-label="گفتگو"></button><button class="hotspot" id="journey" aria-label="سفر"></button><button class="hotspot" id="mobile" aria-label="موبایل"></button>
+<div id="info"><div class="toast" id="toast"></div></div>
+<div class="overlay" id="overlay"><div class="card"><button class="close" id="close">بستن</button><h2 id="title">Ashen Realms</h2><p id="text"></p><div id="badges"></div></div></div>
+</div></div>
+<script>
+const map={
+city:['شهر و قلعه','شهر را توسعه بده، ساختمان‌ها را ارتقا بده و منابع را مدیریت کن.',['🏰 توسعه شهر','🪵 منابع','⬆️ ارتقا']],
+explore:['جهان باز و ماجراجویی','قهرمان برای کشف سرزمین‌های ناشناخته آماده است.',['🧭 اکتشاف','🗺️ نقشه جهان','💎 پاداش']],
+battle:['نبردهای حماسی','نیروها را آماده کن و برای نبردهای بزرگ وارد میدان شو.',['⚔️ ارتش','🔥 نبرد','🏆 پیروزی']],
+hero:['قهرمان','قهرمان خود را ارتقا بده و مهارت‌هایش را توسعه بده.',['🧙 قهرمان','🗡️ تجهیزات','✨ مهارت']],
+inventory:['انبار','منابع و تجهیزات را جمع‌آوری و مدیریت کن.',['💎 آیتم‌ها','🪵 منابع','🛡️ تجهیزات']],
+alliances:['اتحادها و رقابت','با دیگر بازیکنان متحد شو و قلمروها را در نقشه جهان گسترش بده.',['🤝 اتحاد','🗺️ قلمرو','🏆 رتبه‌بندی']],
+dialogue:['شخصیت‌های مختلف','با شخصیت‌های جهان بازی تعامل کن و داستان خودت را بساز.',['💬 گفتگو','📜 داستان','🎭 انتخاب']],
+journey:['هر انتخاب، یک سرنوشت جدید','تصمیم‌های بازیکن باید مسیر جهان را تغییر دهند.',['🌅 سفر','⚖️ انتخاب','✨ پیامد']],
+mobile:['نسخه موبایل','نمونه اولیه از همان تصویر مرجع استفاده می‌کند؛ تعاملات روی خود صحنه قرار گرفته‌اند.',['📱 موبایل','🎮 تعامل','🎨 Art Direction']]
+};
+const overlay=document.getElementById('overlay'),title=document.getElementById('title'),text=document.getElementById('text'),badges=document.getElementById('badges'),toast=document.getElementById('toast');
+function openPanel(k){const d=map[k];title.textContent=d[0];text.textContent=d[1];badges.innerHTML=d[2].map(x=>'<span class="badge">'+x+'</span>').join('');overlay.classList.add('show')}
+document.querySelectorAll('.hotspot').forEach(b=>b.addEventListener('click',()=>openPanel(b.id)));
+document.getElementById('close').onclick=()=>overlay.classList.remove('show');
+overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('show')});
+</script>
+</body></html>
