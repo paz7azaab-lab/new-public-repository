@@ -75,9 +75,11 @@ function show(kind){
   action('🐎 انتخاب سواره',()=>{state.honor+=4;render();msg('واحد سواره برای این نبرد انتخاب شد.');});
   action('🪨 آماده‌سازی محاصره',()=>{if(spend({wood:120,stone:120})){state.honor+=8;render();msg('واحد محاصره آماده شد؛ ۸ شهرت.')}else msg('منابع کافی نیست.');});
   action('🤝 دعوت دوستان',()=>{state.alliance=true;state.honor+=10;render();msg('دعوت متحدان ثبت شد؛ در نسخه آنلاین دوستان می‌توانند به نبرد مشترک بپیوندند.');});
+  action('🏳️ تسلیم شدن',()=>{state.honor=Math.max(0,state.honor-5);render();msg('تسلیم ثبت شد؛ نبرد پایان یافت و ۵ شهرت از دست رفت. قلمرو برای ادامه بازی حفظ شد.');});
  }else if(kind==='pvp'){
   action('🛡️ تقویت دفاع',()=>{if(spend({stone:180,gold:30})){state.honor+=6;render();msg('دفاع قلمرو تقویت شد.')}else msg('منابع کافی نیست.');});
   action('🏳️ اعزام برای رقابت',()=>{if(spend({food:180,wood:120})){state.honor+=10;render();msg('اعزام شبیه‌سازی شد؛ ۱۰ شهرت گرفتی.')}else msg('منابع کافی نیست.');});
+  action('🏳️ تسلیم شدن',()=>{state.honor=Math.max(0,state.honor-5);render();msg('تسلیم ثبت شد؛ رقابت پایان یافت و قلمرو حفظ شد.');});
  }else if(kind==='hero'){
   $('body').innerHTML+='<div class="grid"><div class="tile"><b>سطح</b>'+state.hero+'</div><div class="tile"><b>انرژی</b>'+state.energy+'/100</div><div class="tile"><b>سبک</b>قهرمان آزاد</div></div>';
   action('⬆️ ارتقای قهرمان',()=>{if(spend({gold:120})){state.hero++;state.honor+=4;render();msg('قهرمان به سطح '+state.hero+' رسید.')}else msg('طلا کافی نیست.');});
