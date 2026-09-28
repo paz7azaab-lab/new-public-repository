@@ -32,7 +32,7 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 <button class="hot" id="hCity" aria-label="شهر"></button><button class="hot" id="hWorld" aria-label="جهان"></button><button class="hot" id="hBattle" aria-label="نبرد"></button>
 <button class="hot" id="hHero" aria-label="قهرمان"></button><button class="hot" id="hInv" aria-label="انبار"></button><button class="hot" id="hAlliance" aria-label="اتحاد"></button>
 <div class="bottom">
-<button class="btn" data-open="city">🏰 شهر</button><button class="btn" data-open="world">🗺️ جهان</button><button class="btn" data-open="pve">🐉 وحش</button><button class="btn" data-open="combat">⚔️ نبرد قهرمان</button><button class="btn" data-open="pvp">⚔️ قلمرو</button><button class="btn" data-open="hero">🧙 قهرمان</button><button class="btn" data-open="alliance">🤝 اتحاد</button><button class="btn" data-open="quest">📜 مأموریت</button><button class="btn" data-open="shop">🛍️ فروشگاه</button><button class="btn" data-open="settings">⚙️ تنظیمات</button>
+<button class="btn" data-open="city">🏰 شهر</button><button class="btn" data-open="world">🗺️ جهان</button><button class="btn" data-open="pve">🐉 وحش</button><button class="btn" data-open="combat">⚔️ نبرد قهرمان</button><button class="btn" data-open="pvp">⚔️ قلمرو</button><button class="btn" data-open="hero">🧙 قهرمان</button><button class="btn" data-open="alliance">🤝 اتحاد</button><button class="btn" data-open="quest">📜 مأموریت</button><button class="btn" data-open="shop">🛍️ فروشگاه</button><button class="btn" data-open="settings">⚙️ تنظیمات</button><button class="btn" data-open="systems24">✨ ۲۴ سیستم</button>
 </div></div>
 </div></div>
 
@@ -50,6 +50,33 @@ function troopCard(name,icon,key){const b=state.buildingLevels[key]||1;const l=M
 function buildingCard(key,name,icon){const l=state.buildingLevels[key]||1;return '<div class="tile"><b>'+icon+' '+name+'</b><span>سطح '+l+'/50</span><br><small>'+levelVisual(l)+'</small></div>';}
 function upgradeBuilding(key,name){const l=state.buildingLevels[key]||1;if(l>=50){msg(name+' به حداکثر سطح ۵۰ رسیده است.');return;}const cost={wood:Math.ceil(60+l*18),stone:Math.ceil(45+l*15),gold:Math.ceil(10+l*3)};if(spend(cost)){state.buildingLevels[key]=l+1;state.honor+=2;render();msg(name+' به سطح '+(l+1)+' ارتقا یافت؛ ظاهر آن تغییر کرد.');}else msg('منابع کافی نیست.');}
 function spend(cost){for(const k in cost)if(state[k]<cost[k])return false;for(const k in cost)state[k]-=cost[k];return true}
+function systems24(){return [
+'🧬 درخت فناوری: شاخه‌های اقتصاد، دفاع، توسعه و نیروها با پژوهش مرحله‌ای',
+'👨‍✈️ فرماندهان: فرماندهان با نقش‌ها و مهارت‌های متفاوت برای مدیریت نیروها',
+'🗺️ مناطق جهان: جنگل، کوهستان، دشت، رودخانه و برف با ویژگی‌های متفاوت',
+'🏰 دفاع چندلایه شهر: دیوار، دروازه، برج و مرکز شهر',
+'🍞 تأمین نیرو: فعالیت نیروها به منابع و آمادگی وابسته است',
+'🏅 دستاوردها: اهداف بلندمدت با نشان و پاداش',
+'📜 کمپین داستانی: فصل‌های داستانی با مأموریت‌های متوالی',
+'🧑‍🤝‍🧑 دوستان: فهرست دوستان و فعالیت‌های مشترک',
+'💬 چت اتحاد و جهان: ارتباط اجتماعی در نسخه آنلاین',
+'🏛️ شورای پادشاهی: مشاوران با پیشنهادهای متفاوت',
+'🎒 تجهیزات قهرمان: مجموعه آیتم‌های فانتزی و قابل ارتقا',
+'🌟 مهارت‌های قهرمان: درخت مهارت با مسیرهای انتخابی',
+'⚔️ آرایش نیروها: انتخاب ترکیب و نقش واحدها پیش از نبرد',
+'🏳️ دیپلماسی: پیمان، تجارت، مذاکره و روابط قلمروها',
+'💱 بازار بازیکنان: اقتصاد مبادله‌ای در نسخه آنلاین',
+'🚚 کاروان تجارت: جابه‌جایی منابع بین مناطق',
+'🏆 لیگ پادشاهان: رقابت‌های چندسطحی و رتبه‌بندی',
+'📊 پروفایل پادشاه: تاریخچه، افتخارات و آمار',
+'🌦️ رویدادهای محیطی: تغییرات آب‌وهوا و اتفاقات منطقه‌ای',
+'🏗️ تغییر واقعی شهر: ارتقای ساختمان‌ها با تغییرات ظاهری',
+'🎬 صحنه‌های سینمایی: نمایش رویدادهای مهم داستان',
+'🧩 معما و اکتشاف: مأموریت‌های غیرنبردی و کشف مسیرها',
+'🏛️ تالار تاریخ پادشاهی: ثبت رویدادهای مهم',
+'🔄 جهان پویا: رویدادها و وضعیت مناطق با گذر فصل‌ها تغییر می‌کند'
+];}
+function open24(){show('systems24');}
 function extraFeatures(){return {
  liveMap:'نقشه جهان زنده',
  choices:'تصمیم‌های پادشاه',
@@ -66,6 +93,8 @@ function extraFeatures(){return {
  story:'داستان چندشاخه',
  hall:'Hall of Fame'
 };}
+
+// 24 core systems: integrated prototype layer
 function show(kind){
  const data={
  city:['🏰 شهر و قلعه','پایتخت تو مرکز اقتصاد و دفاع است. ساختمان‌ها را ارتقا بده و تولید منابع را بیشتر کن.'],
@@ -78,11 +107,33 @@ function show(kind){
  quest:['📜 مأموریت و انتخاب','انتخاب‌های تو می‌توانند پاداش، شهرت و مسیر رویداد بعدی را تغییر دهند.'],
  shop:['🛍️ فروشگاه','آیتم‌های ظاهری و بسته‌های اختیاری.'],
  settings:['⚙️ تنظیمات','تنظیمات بازی، صدا، اعلان‌ها، کیفیت تصویر و کنترل‌ها.'],
+ systems24:['✨ ۲۴ سیستم جدید','۲۴ سیستم اصلی بازی به‌صورت یکپارچه طراحی شده‌اند.']
  features:['✨ ۱۶ ویژگی جدید','تمام ۱۶ قابلیت در نسخه پروتوتایپ به‌صورت سیستم‌های قابل تعامل اضافه شده‌اند.']
  };
  $('title').textContent=data[kind][0];$('body').innerHTML='<p class="muted">'+data[kind][1]+'</p>';
  $('actions').innerHTML='';$('log').textContent='آماده‌ای.';
- if(kind==='features'){
+ if(kind==='systems24'){
+ $('body').innerHTML='<p class="muted">۲۴ سیستم جدید به‌صورت یکپارچه طراحی شده‌اند؛ سیستم‌های اجتماعی/آنلاین در نسخه فعلی شبیه‌سازی رابط کاربری هستند و برای اجرای واقعی به سرور نیاز دارند.</p><div class="grid">'+systems24().map((x,i)=>'<div class="tile"><b>'+(i+1)+'.</b>'+x+'</div>').join('')+'</div>';
+ action('🧬 باز کردن فناوری',()=>{state.honor+=5;render();msg('درخت فناوری باز شد و پژوهش مرحله‌ای آماده است.');});
+ action('👨‍✈️ فرماندهان',()=>{state.honor+=5;render();msg('مدیریت فرماندهان فعال شد.');});
+ action('🏆 دستاوردها',()=>{state.fame+=2;render();msg('دستاورد جدید ثبت شد.');});
+ action('📜 کمپین داستانی',()=>{state.honor+=7;render();msg('فصل داستانی بعدی باز شد.');});
+ action('🏛️ شورای پادشاهی',()=>{state.npcTrust+=1;render();msg('شورای پادشاهی تشکیل شد.');});
+ action('🌟 مهارت قهرمان',()=>{state.hero++;state.honor+=4;render();msg('یک مرحله مهارت قهرمان فعال شد.');});
+ action('⚔️ آرایش نیروها',()=>{state.honor+=4;render();msg('آرایش نیروها برای نبرد ذخیره شد.');});
+ action('🏳️ دیپلماسی',()=>{state.peace++;state.honor+=5;render();msg('رابطه دیپلماتیک ثبت شد.');});
+ action('🚚 کاروان تجارت',()=>{if(spend({food:100,wood:80})){state.gold+=80;render();msg('کاروان تجارت با موفقیت شبیه‌سازی شد.');}else msg('منابع کافی نیست.');});
+ action('🏆 لیگ پادشاهان',()=>{state.fame+=3;state.honor+=5;render();msg('امتیاز لیگ ثبت شد.');});
+ action('🎬 صحنه داستانی',()=>{state.fame+=2;render();msg('صحنه سینمایی رویداد اجرا شد.');});
+ action('🧩 معمای اکتشافی',()=>{if(spend({food:70})){state.gold+=60;render();msg('معما حل شد و ۶۰ طلا دریافت شد.');}else msg('غذای کافی نیست.');});
+ action('🏛️ ثبت تاریخ پادشاهی',()=>{state.fame+=4;render();msg('رویداد در تالار تاریخ ثبت شد.');});
+ action('🌦️ رویداد محیطی',()=>{state.weather=state.weather==='صاف'?'بارانی':'صاف';render();msg('رویداد محیطی فعال شد: '+state.weather+'.');});
+ action('🏗️ تغییر ظاهر شهر',()=>{state.buildingLevels.castle=Math.min(50,state.buildingLevels.castle+1);render();msg('ظاهر قلعه با ارتقا تغییر کرد.');});
+ action('💱 بازار بازیکنان',()=>{state.gold+=40;render();msg('معامله بازار در حالت نمونه ثبت شد.');});
+ action('💬 چت اجتماعی',()=>{state.invites++;render();msg('اتصال چت برای نسخه آنلاین آماده است.');});
+ action('🧑‍🤝‍🧑 دوستان',()=>{state.invites++;state.honor+=2;render();msg('یک فعالیت دوستانه ثبت شد.');});
+ action('🔄 جهان پویا',()=>{state.season++;render();msg('فصل جهان به '+state.season+' تغییر کرد.');});
+} else kind==='features'){
  $('body').innerHTML+='<div class="grid"><div class="tile"><b>🗺️ نقشه زنده</b>قلمروها تغییر می‌کنند</div><div class="tile"><b>👑 تصمیم پادشاه</b>اثر روی بازی</div><div class="tile"><b>🐉 Boss</b>هیولاهای ویژه</div><div class="tile"><b>🏰 محاصره</b>چندمرحله‌ای</div><div class="tile"><b>🏆 فصل‌ها</b>رقابت ماهانه</div><div class="tile"><b>🎭 NPC</b>اعتماد و رابطه</div><div class="tile"><b>🧭 اکتشاف</b>مناطق مخفی</div><div class="tile"><b>🌦️ آب‌وهوا</b>روز و شب</div><div class="tile"><b>⚔️ تاکتیک</b>سبک‌های مختلف</div><div class="tile"><b>🕊️ دیپلماسی</b>صلح و مذاکره</div><div class="tile"><b>💎 گنج</b>پاداش مخفی</div><div class="tile"><b>🎨 شخصی‌سازی</b>ظاهر پادشاه و قلعه</div><div class="tile"><b>📖 داستان</b>مسیرهای چندشاخه</div><div class="tile"><b>🏛️ Hall of Fame</b>ثبت افتخارات</div><div class="tile"><b>🤝 اتحاد</b>قلمرو مشترک</div><div class="tile"><b>🌍 جهان زنده</b>رویدادهای پویا</div></div>';
  action('🌦️ تغییر آب‌وهوا',()=>{state.weather=state.weather==='صاف'?'بارانی':'صاف';render();msg('آب‌وهوا به '+state.weather+' تغییر کرد.');});
  action('💎 کشف گنج',()=>{state.treasures++;state.gold+=100;state.honor+=6;render();msg('گنج مخفی پیدا شد: ۱۰۰ طلا و ۶ شهرت.');});
