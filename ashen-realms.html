@@ -41,9 +41,9 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 </div></div>
 
 <script>
-const state={wood:1200,stone:900,food:1500,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0,pass:false,vip:false,skins:0,seasonTokens:0,invites:0,eventTickets:0,loginDays:1,productionBuildings:0,buildingLevels:{castle:1,wall:1,cityHall:1,treasury:1,barracks:1,stable:1,range:1,university:1,clinic:1,siege:1,market:1,spearmen:1,prodFarm:1,prodWood:1,prodStone:1,prodIron:1}};
+const state={wood:1200,stone:900,food:1500,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0,pass:false,vip:false,skins:0,seasonTokens:0,invites:0,eventTickets:0,loginDays:1,productionBuildings:0,buildingLevels:{castle:1,wall:1,cityHall:1,treasury:1,barracks:1,stable:1,range:1,university:1,clinic:1,siege:1,market:1,spearmen:1,prodFarm:1,prodWood:1,prodStone:1,prodIron:1},automation:{dailyClaimed:false,passive:true,autoEvents:true,autoRotation:true,adReady:true,seasonProgress:0,lastTick:Date.now()},monetization:{skins:0,passes:0,vip:false,eventTickets:0,adRewards:0,referrals:0,shopCycle:1,offers:0}};
 const $=id=>document.getElementById(id);
-function render(){['wood','stone','food','gold','honor'].forEach(k=>$(k).textContent=state[k]);$('phase').textContent=(state.night?'🌙 شب':'☀️ روز')+' • فصل ۱';}
+function render(){['wood','stone','food','gold','honor'].forEach(k=>$(k).textContent=Math.floor(state[k]));$('phase').textContent=(state.night?'🌙 شب':'☀️ روز')+' • فصل '+state.season+' • '+(state.automation.passive?'⚙️ خودکار':'⏸️ متوقف');}
 function levelVisual(l){return 'ظاهر اختصاصی سطح '+l+' • '+(l<=10?'چوب و سنگ':l<=20?'سنگ‌کاری':l<=30?'قلعه‌سازی پیشرفته':l<=40?'معماری سلطنتی':'معماری افسانه‌ای')+' • جزئیات ظاهری + سطح قدرت '+l;}
 function troopStats(l){return {hp:l*100,attack:l*12,defense:l*10,climb:l*8,speed:l*7,maneuver:l*9};}
 function troopCard(name,icon,key){const b=state.buildingLevels[key]||1;const l=Math.min(15,Math.ceil(b/4));const s=troopStats(l);return '<div class="tile"><b>'+icon+' '+name+'</b><span>نیرو سطح '+l+'/15</span><br>❤️ جان '+s.hp+' • ⚔️ قدرت '+s.attack+'<br>🛡️ دفاع '+s.defense+' • 🧗 کوه‌نوردی '+s.climb+'<br>💨 سرعت '+s.speed+' • 🔄 مانورپذیری '+s.maneuver+'</div>';}
@@ -77,6 +77,38 @@ function systems24(){return [
 '🔄 جهان پویا: رویدادها و وضعیت مناطق با گذر فصل‌ها تغییر می‌کند'
 ];}
 function open24(){show('systems24');}
+
+// AUTO-OPS: gameplay/retention loops run locally without manual administration.
+function automationTick(){
+  const a=state.automation;
+  const m=state.monetization;
+  if(a.passive){
+    const p=Math.min(30,state.productionBuildings||1);
+    state.wood+=p*2; state.stone+=p; state.food+=p*3;
+    state.energy=Math.min(100,state.energy+1);
+    state.automation.seasonProgress+=1;
+    if(state.automation.seasonProgress>=100){state.automation.seasonProgress=0;state.season++;state.seasonTokens+=10;state.fame+=3;}
+  }
+  if(a.autoEvents && Math.random()<0.08){state.eventTickets=Math.min(3,state.eventTickets+1);state.honor+=1;}
+  if(a.autoRotation && Math.random()<0.05){m.shopCycle++;m.offers++;state.seasonTokens+=1;}
+  if(state.automation.adReady===false) state.automation.adReady=true;
+  render();
+}
+function dailyAutomation(){
+  if(!state.automation.dailyClaimed){
+    state.loginDays++;
+    state.gold+=25;
+    state.seasonTokens+=2;
+    state.automation.dailyClaimed=true;
+  }
+}
+function resetDailyAutomation(){
+  state.automation.dailyClaimed=false;
+}
+setInterval(automationTick,60000);
+setInterval(()=>{resetDailyAutomation();dailyAutomation();},86400000);
+dailyAutomation();
+
 function extraFeatures(){return {
  liveMap:'نقشه جهان زنده',
  choices:'تصمیم‌های پادشاه',
@@ -192,7 +224,7 @@ function show(kind){
  action('🎮 تنظیم کنترل‌ها',()=>{msg('کنترل‌های بازی قابل شخصی‌سازی هستند.');});
  action('🔒 حریم خصوصی',()=>{msg('تنظیمات حریم خصوصی و حساب در این بخش قرار می‌گیرد.');});
 }else if(kind==='shop'){
- $('body').innerHTML+='<div class="grid"><div class="tile"><b>🎟️ Season Pass</b>پاداش‌های فصلی</div><div class="tile"><b>👑 Royal Pass</b>مأموریت‌های ویژه</div><div class="tile"><b>🎨 فروشگاه ظاهری</b>اسکین و تزئینات</div><div class="tile"><b>📺 تبلیغ اختیاری</b>پاداش انتخابی</div><div class="tile"><b>🏆 فروشگاه فصل</b>آیتم‌های فصلی</div><div class="tile"><b>🤝 بسته اتحاد</b>امکانات اجتماعی</div><div class="tile"><b>🐉 رویداد محدود</b>جایزه ویژه</div><div class="tile"><b>⭐ VIP</b>امکانات رفاهی</div><div class="tile"><b>🎟️ بلیت رویداد</b>ورود به رویداد</div><div class="tile"><b>📅 ورود ۳۰روزه</b>پاداش روزانه</div></div>';
+ $('body').innerHTML+='<div class="tile"><b>⚙️ موتور خودکار</b>تولید منابع، پاداش روزانه، چرخش فروشگاه و رویدادهای فصلی بدون مدیریت دستی اجرا می‌شوند.</div>'+'<div class="grid"><div class="tile"><b>🎟️ Season Pass</b>پاداش‌های فصلی</div><div class="tile"><b>👑 Royal Pass</b>مأموریت‌های ویژه</div><div class="tile"><b>🎨 فروشگاه ظاهری</b>اسکین و تزئینات</div><div class="tile"><b>📺 تبلیغ اختیاری</b>پاداش انتخابی</div><div class="tile"><b>🏆 فروشگاه فصل</b>آیتم‌های فصلی</div><div class="tile"><b>🤝 بسته اتحاد</b>امکانات اجتماعی</div><div class="tile"><b>🐉 رویداد محدود</b>جایزه ویژه</div><div class="tile"><b>⭐ VIP</b>امکانات رفاهی</div><div class="tile"><b>🎟️ بلیت رویداد</b>ورود به رویداد</div><div class="tile"><b>📅 ورود ۳۰روزه</b>پاداش روزانه</div></div>';
  action('🎟️ فعال‌سازی Season Pass',()=>{state.pass=true;state.seasonTokens+=20;render();msg('Season Pass فعال شد؛ ۲۰ توکن فصل دریافت شد.');});
  action('🎨 دریافت آیتم ظاهری',()=>{state.skins++;render();msg('یک آیتم ظاهری جدید به مجموعه اضافه شد.');});
  action('📺 تماشای تبلیغ اختیاری',()=>{state.gold+=35;state.seasonTokens+=3;render();msg('پاداش تبلیغ اختیاری: ۳۵ طلا و ۳ توکن فصل.');});
@@ -203,6 +235,11 @@ function show(kind){
  action('📅 پاداش ورود امروز',()=>{state.loginDays++;state.gold+=20;render();msg('پاداش ورود امروز دریافت شد.');});
  action('👥 دعوت دوستان',()=>{state.invites++;state.honor+=3;render();msg('دعوت ثبت شد؛ در نسخه آنلاین پاداش دعوت اعمال می‌شود.');});
  action('🎁 بسته مناسبتی',()=>{state.gold+=50;state.seasonTokens+=5;render();msg('بسته مناسبتی نمونه دریافت شد.');});
+ action('⚙️ فعال/غیرفعال کردن تولید خودکار',()=>{state.automation.passive=!state.automation.passive;render();msg(state.automation.passive?'تولید خودکار فعال شد.':'تولید خودکار متوقف شد.');});
+ action('🔄 چرخش خودکار فروشگاه',()=>{state.automation.autoRotation=!state.automation.autoRotation;render();msg(state.automation.autoRotation?'چرخش خودکار پیشنهادها فعال شد.':'چرخش خودکار پیشنهادها متوقف شد.');});
+ action('🎉 رویدادهای خودکار',()=>{state.automation.autoEvents=!state.automation.autoEvents;render();msg(state.automation.autoEvents?'رویدادهای خودکار فعال شد.':'رویدادهای خودکار متوقف شد.');});
+ action('📅 دریافت پاداش روزانه',()=>{if(state.automation.dailyClaimed)msg('پاداش امروز قبلاً دریافت شده است.');else{dailyAutomation();render();msg('پاداش روزانه به‌صورت خودکار ثبت شد.');}});
+ action('📈 وضعیت درآمدزایی خودکار',()=>{msg('Pass: '+(state.pass?'فعال':'غیرفعال')+' • VIP: '+(state.vip?'فعال':'غیرفعال')+' • اسکین: '+state.skins+' • تبلیغ: '+state.monetization.adRewards+' • چرخه فروشگاه: '+state.monetization.shopCycle);});
 }else if(kind==='quest'){
   action('🌅 انتخاب صلح',()=>{state.food+=250;state.honor+=5;render();msg('پاداش صلح: ۲۵۰ غذا و ۵ شهرت.');});
   action('🔥 انتخاب ریسک',()=>{state.gold+=140;state.honor+=12;render();msg('پاداش ریسک: ۱۴۰ طلا و ۱۲ شهرت.');});
