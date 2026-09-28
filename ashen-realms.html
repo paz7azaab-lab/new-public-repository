@@ -97,7 +97,9 @@ function show(kind){
   buildingCard('barracks','پادگان','⚔️')+buildingCard('stable','اصطبل','🐎')+buildingCard('range','میدان تیراندازی','🏹')+buildingCard('university','دانشگاه','🔬')+
   buildingCard('clinic','درمانگاه','🏥')+buildingCard('siege','کارگاه محاصره','🛠️')+buildingCard('market','بازار','🛒')+
   '</div><div class="tile"><b>🌾🪵🪨⛏️ تولیدات</b>۳۰ جایگاه تولیدی؛ هر جایگاه نیز سطح ۱ تا ۵۰ دارد.</div>';
-  const names=[['castle','قلعه سلطنتی'],['wall','دیوار شهر'],['cityHall','تالار شهر'],['treasury','خزانه'],['barracks','پادگان'],['stable','اصطبل'],['range','میدان تیراندازی'],['university','دانشگاه'],['clinic','درمانگاه'],['siege','کارگاه محاصره'],['market','بازار']];
+  const names=[['castle','قلعه سلطنتی'],['wall','دیوار شهر'],['cityHall','تالار شهر'],['treasury','خزانه'],['barracks','پادگان'],['stable','اصطبل'],['range','میدان تیراندازی'],['university','دانشگاه'],['clinic','درمانگاه'],['siege','کارگاه محاصره'],['market','بازار'],['prodFarm','مزرعه'],['prodWood','کارگاه چوب'],['prodStone','معدن سنگ'],['prodIron','معدن آهن']];
+  names.forEach(([k,n])=>{if(!state.buildingLevels[k])state.buildingLevels[k]=1;});
+
   names.forEach(([k,n])=>action('⬆️ ارتقای '+n,()=>upgradeBuilding(k,n)));
   action('🌾 ارتقای تولیدات',()=>upgradeBuilding('prodFarm','ساختمان تولیدی'));
   action('🪵 ارتقای تولیدات',()=>upgradeBuilding('prodWood','ساختمان تولیدی'));
