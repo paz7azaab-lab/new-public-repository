@@ -127,6 +127,31 @@ function extraFeatures(){return {
 };}
 
 // 24 core systems: integrated prototype layer
+
+async function startRealPayment(productId){
+  msg('در حال ساخت سفارش پرداخت...');
+  try{
+    const r=await fetch('/api/create-order',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({productId,playerId:getPlayerId()})
+    });
+    const data=await r.json();
+    if(!r.ok || !data.paymentUrl) throw new Error(data.message||'سرویس پرداخت هنوز پیکربندی نشده است.');
+    window.location.href=data.paymentUrl;
+  }catch(e){
+    msg('پرداخت واقعی هنوز فعال نشده: '+e.message);
+  }
+}
+function getPlayerId(){
+  let id=localStorage.getItem('ashen_player_id');
+  if(!id){id='player_'+crypto.randomUUID();localStorage.setItem('ashen_player_id',id);}
+  return id;
+}
+function showPaymentStatus(){
+  msg('سیستم پرداخت به Backend متصل شده؛ برای تراکنش واقعی فقط اتصال درگاه قانونی و کلیدهای آن باقی مانده است.');
+}
+
 function show(kind){
  const data={
  city:['🏰 شهر و قلعه','پایتخت تو مرکز اقتصاد و دفاع است. ساختمان‌ها را ارتقا بده و تولید منابع را بیشتر کن.'],
@@ -225,7 +250,10 @@ function show(kind){
  action('🔒 حریم خصوصی',()=>{msg('تنظیمات حریم خصوصی و حساب در این بخش قرار می‌گیرد.');});
 }else if(kind==='shop'){
  $('body').innerHTML+='<div class="tile"><b>⚙️ موتور خودکار</b>تولید منابع، پاداش روزانه، چرخش فروشگاه و رویدادهای فصلی بدون مدیریت دستی اجرا می‌شوند.</div>'+'<div class="grid"><div class="tile"><b>🎟️ Season Pass</b>پاداش‌های فصلی</div><div class="tile"><b>👑 Royal Pass</b>مأموریت‌های ویژه</div><div class="tile"><b>🎨 فروشگاه ظاهری</b>اسکین و تزئینات</div><div class="tile"><b>📺 تبلیغ اختیاری</b>پاداش انتخابی</div><div class="tile"><b>🏆 فروشگاه فصل</b>آیتم‌های فصلی</div><div class="tile"><b>🤝 بسته اتحاد</b>امکانات اجتماعی</div><div class="tile"><b>🐉 رویداد محدود</b>جایزه ویژه</div><div class="tile"><b>⭐ VIP</b>امکانات رفاهی</div><div class="tile"><b>🎟️ بلیت رویداد</b>ورود به رویداد</div><div class="tile"><b>📅 ورود ۳۰روزه</b>پاداش روزانه</div></div>';
- action('🎟️ فعال‌سازی Season Pass',()=>{state.pass=true;state.seasonTokens+=20;render();msg('Season Pass فعال شد؛ ۲۰ توکن فصل دریافت شد.');});
+ action('💳 خرید واقعی Season Pass',()=>startRealPayment('season_pass'));
+  action('💳 خرید واقعی آیتم ظاهری',()=>startRealPayment('cosmetic_skin'));
+  action('🔐 وضعیت اتصال پرداخت',showPaymentStatus);
+  action('🎟️ فعال‌سازی Season Pass',()=>{state.pass=true;state.seasonTokens+=20;render();msg('Season Pass فعال شد؛ ۲۰ توکن فصل دریافت شد.');});
  action('🎨 دریافت آیتم ظاهری',()=>{state.skins++;render();msg('یک آیتم ظاهری جدید به مجموعه اضافه شد.');});
  action('📺 تماشای تبلیغ اختیاری',()=>{state.gold+=35;state.seasonTokens+=3;render();msg('پاداش تبلیغ اختیاری: ۳۵ طلا و ۳ توکن فصل.');});
  action('🏆 فروشگاه فصل',()=>{if(state.seasonTokens>=5){state.seasonTokens-=5;state.skins++;render();msg('یک آیتم فصلی دریافت شد.');}else msg('توکن فصل کافی نیست.');});
