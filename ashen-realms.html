@@ -41,10 +41,12 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 </div></div>
 
 <script>
-const state={wood:1200,stone:900,food:1500,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0,pass:false,vip:false,skins:0,seasonTokens:0,invites:0,eventTickets:0,loginDays:1,productionBuildings:0,buildingLevels:{castle:1,wall:1,cityHall:1,treasury:1,barracks:1,stable:1,range:1,university:1,clinic:1,siege:1,market:1,prodFarm:1,prodWood:1,prodStone:1,prodIron:1}};
+const state={wood:1200,stone:900,food:1500,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0,pass:false,vip:false,skins:0,seasonTokens:0,invites:0,eventTickets:0,loginDays:1,productionBuildings:0,buildingLevels:{castle:1,wall:1,cityHall:1,treasury:1,barracks:1,stable:1,range:1,university:1,clinic:1,siege:1,market:1,spearmen:1,prodFarm:1,prodWood:1,prodStone:1,prodIron:1}};
 const $=id=>document.getElementById(id);
 function render(){['wood','stone','food','gold','honor'].forEach(k=>$(k).textContent=state[k]);$('phase').textContent=(state.night?'🌙 شب':'☀️ روز')+' • فصل ۱';}
 function levelVisual(l){return 'ظاهر اختصاصی سطح '+l+' • '+(l<=10?'چوب و سنگ':l<=20?'سنگ‌کاری':l<=30?'قلعه‌سازی پیشرفته':l<=40?'معماری سلطنتی':'معماری افسانه‌ای')+' • جزئیات ظاهری + سطح قدرت '+l;}
+function troopStats(l){return {hp:l*100,attack:l*12,defense:l*10,climb:l*8,speed:l*7,maneuver:l*9};}
+function troopCard(name,icon,key){const b=state.buildingLevels[key]||1;const l=Math.min(15,Math.ceil(b/4));const s=troopStats(l);return '<div class="tile"><b>'+icon+' '+name+'</b><span>نیرو سطح '+l+'/15</span><br>❤️ جان '+s.hp+' • ⚔️ قدرت '+s.attack+'<br>🛡️ دفاع '+s.defense+' • 🧗 کوه‌نوردی '+s.climb+'<br>💨 سرعت '+s.speed+' • 🔄 مانورپذیری '+s.maneuver+'</div>';}
 function buildingCard(key,name,icon){const l=state.buildingLevels[key]||1;return '<div class="tile"><b>'+icon+' '+name+'</b><span>سطح '+l+'/50</span><br><small>'+levelVisual(l)+'</small></div>';}
 function upgradeBuilding(key,name){const l=state.buildingLevels[key]||1;if(l>=50){msg(name+' به حداکثر سطح ۵۰ رسیده است.');return;}const cost={wood:Math.ceil(60+l*18),stone:Math.ceil(45+l*15),gold:Math.ceil(10+l*3)};if(spend(cost)){state.buildingLevels[key]=l+1;state.honor+=2;render();msg(name+' به سطح '+(l+1)+' ارتقا یافت؛ ظاهر آن تغییر کرد.');}else msg('منابع کافی نیست.');}
 function spend(cost){for(const k in cost)if(state[k]<cost[k])return false;for(const k in cost)state[k]-=cost[k];return true}
@@ -95,9 +97,9 @@ function show(kind){
   $('body').innerHTML='<p class="muted">هر ساختمان از سطح ۱ تا ۵۰ قابل ارتقاست. هر بازه سطحی ظاهر، جزئیات معماری و جلوه متفاوتی دارد.</p><div class="grid">'+
   buildingCard('castle','قلعه سلطنتی','🏰')+buildingCard('wall','دیوار شهر','🧱')+buildingCard('cityHall','تالار شهر','🏛️')+buildingCard('treasury','خزانه','💰')+
   buildingCard('barracks','پادگان','⚔️')+buildingCard('stable','اصطبل','🐎')+buildingCard('range','میدان تیراندازی','🏹')+buildingCard('university','دانشگاه','🔬')+
-  buildingCard('clinic','درمانگاه','🏥')+buildingCard('siege','کارگاه محاصره','🛠️')+buildingCard('market','بازار','🛒')+
+  buildingCard('clinic','درمانگاه','🏥')+buildingCard('siege','کارگاه محاصره','🛠️')+buildingCard('market','بازار','🛒')+buildingCard('spearmen','ساختمان سربازان نیزه‌دار','🔱')+
   '</div><div class="tile"><b>🌾🪵🪨⛏️ تولیدات</b>۳۰ جایگاه تولیدی؛ هر جایگاه نیز سطح ۱ تا ۵۰ دارد.</div>';
-  const names=[['castle','قلعه سلطنتی'],['wall','دیوار شهر'],['cityHall','تالار شهر'],['treasury','خزانه'],['barracks','پادگان'],['stable','اصطبل'],['range','میدان تیراندازی'],['university','دانشگاه'],['clinic','درمانگاه'],['siege','کارگاه محاصره'],['market','بازار'],['prodFarm','مزرعه'],['prodWood','کارگاه چوب'],['prodStone','معدن سنگ'],['prodIron','معدن آهن']];
+  const names=[['castle','قلعه سلطنتی'],['wall','دیوار شهر'],['cityHall','تالار شهر'],['treasury','خزانه'],['barracks','پادگان'],['stable','اصطبل'],['range','میدان تیراندازی'],['university','دانشگاه'],['clinic','درمانگاه'],['siege','کارگاه محاصره'],['market','بازار'],['spearmen','ساختمان سربازان نیزه‌دار'],['prodFarm','مزرعه'],['prodWood','کارگاه چوب'],['prodStone','معدن سنگ'],['prodIron','معدن آهن']];
   names.forEach(([k,n])=>{if(!state.buildingLevels[k])state.buildingLevels[k]=1;});
 
   names.forEach(([k,n])=>action('⬆️ ارتقای '+n,()=>upgradeBuilding(k,n)));
@@ -105,6 +107,7 @@ function show(kind){
   action('🪵 ارتقای تولیدات',()=>upgradeBuilding('prodWood','ساختمان تولیدی'));
   action('🪨 ارتقای تولیدات',()=>upgradeBuilding('prodStone','ساختمان تولیدی'));
   action('⛏️ ارتقای تولیدات',()=>upgradeBuilding('prodIron','ساختمان تولیدی'));
+  action('⬆️ ارتقای ساختمان نیزه‌داران',()=>upgradeBuilding('spearmen','ساختمان سربازان نیزه‌دار'));
   action('🌾 ساخت ساختمان تولیدی',()=>{if(state.productionBuildings<30){state.productionBuildings++;render();msg('یک جایگاه تولیدی ساخته شد؛ '+state.productionBuildings+'/30.');}else msg('سقف ۳۰ ساختمان تولیدی تکمیل شده است.');});
 }else if(kind==='world'){
   action('🧭 اکتشاف',()=>{if(spend({food:120})){state.honor+=8;render();msg('منطقه جدید کشف شد؛ ۸ شهرت به دست آمد.')}else msg('غذای کافی نیست.');});
