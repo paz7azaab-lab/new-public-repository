@@ -1,1 +1,5 @@
-export default function Home(){return <main><h1>🤖 YouTube Autopilot Agent</h1><p>Chat-controlled autonomous YouTube channel manager.</p><ul><li>Topic research and content planning</li><li>Script, title, description and thumbnail brief generation</li><li>Video production pipeline</li><li>YouTube upload and scheduling</li><li>Channel analytics</li><li>Comment monitoring</li><li>Automatic publishing cadence</li></ul><p>One-time YouTube OAuth and service configuration are required; after that the agent can operate without routine human intervention.</p></main>}
+import { redirect } from 'next/navigation';
+
+export default function Home() {
+  redirect('/ashen-realms.html');
+}
