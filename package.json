@@ -1,1 +1,30 @@
-{"name":"youtube-autopilot-agent","version":"2.0.0","private":true,"scripts":{"dev":"next dev","build":"next build","start":"next start"},"dependencies":{"next":"latest","react":"latest","react-dom":"latest","openai":"latest","mcp-handler":"latest","googleapis":"latest"},"devDependencies":{"typescript":"latest","@types/node":"latest","@types/react":"latest","@types/react-dom":"latest"}}
+{
+  "name": "youtube-autopilot-agent",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "cap:add:android": "npx cap add android",
+    "cap:sync": "npx cap sync",
+    "cap:open:android": "npx cap open android"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "openai": "latest",
+    "mcp-handler": "latest",
+    "googleapis": "latest",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/android": "^8.0.0"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@capacitor/cli": "^8.0.0"
+  }
+}
