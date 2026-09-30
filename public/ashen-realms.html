@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ashen Realms — Kingdom Strategy Prototype</title>
+<title>Ashen Realms — Kingdom Strategy</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#071019;color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
 button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{position:relative;overflow:hidden;border:1px solid #9d7941;border-radius:16px;background:#0a121a;box-shadow:0 18px 70px #000b}
@@ -25,7 +25,7 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 <img class="art" src="https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5e1ebf60e4fb2011301965b7c1d1b755e0d8e781c67864e6e62e6a8d36766ec2.png" alt="Ashen Realms visual reference">
 <div class="hud">
 <div class="top">
-<div class="brand">🔥 ASHEN REALMS <span style="font-weight:400">• Prototype</span></div>
+<div class="brand">🔥 ASHEN REALMS <span style="font-weight:400">• Release Build</span></div>
 <div class="resources"><span>🪵 <b id="wood">1200</b></span><span>🪨 <b id="stone">900</b></span><span>🌾 <b id="food">1500</b></span><span>💰 <b id="gold">320</b></span><span>⭐ <b id="honor">0</b></span></div>
 <div class="phase" id="phase">☀️ روز • فصل ۱</div>
 </div>
@@ -43,7 +43,11 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 <script>
 const state={wood:1200,stone:900,food:1500,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0,pass:false,vip:false,skins:0,seasonTokens:0,invites:0,eventTickets:0,loginDays:1,productionBuildings:0,buildingLevels:{castle:1,wall:1,cityHall:1,treasury:1,barracks:1,stable:1,range:1,university:1,clinic:1,siege:1,market:1,spearmen:1,prodFarm:1,prodWood:1,prodStone:1,prodIron:1},automation:{dailyClaimed:false,passive:true,autoEvents:true,autoRotation:true,adReady:true,seasonProgress:0,lastTick:Date.now()},monetization:{skins:0,passes:0,vip:false,eventTickets:0,adRewards:0,referrals:0,shopCycle:1,offers:0}};
 const $=id=>document.getElementById(id);
-function render(){['wood','stone','food','gold','honor'].forEach(k=>$(k).textContent=Math.floor(state[k]));$('phase').textContent=(state.night?'🌙 شب':'☀️ روز')+' • فصل '+state.season+' • '+(state.automation.passive?'⚙️ خودکار':'⏸️ متوقف');}
+const SAVE_KEY='ashen_realms_save_v1';
+function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));}catch(e){}}
+function loadGame(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return;const saved=JSON.parse(raw);Object.assign(state,saved);state.buildingLevels=Object.assign({},state.buildingLevels,saved.buildingLevels||{});state.automation=Object.assign({},state.automation,saved.automation||{});state.monetization=Object.assign({},state.monetization,saved.monetization||{});}catch(e){}}
+
+function render(){['wood','stone','food','gold','honor'].forEach(k=>$(k).textContent=Math.floor(state[k]));$('phase').textContent=(state.night?'🌙 شب':'☀️ روز')+' • فصل '+state.season+' • '+(state.automation.passive?'⚙️ خودکار':'⏸️ متوقف');saveGame();}
 function levelVisual(l){return 'ظاهر اختصاصی سطح '+l+' • '+(l<=10?'چوب و سنگ':l<=20?'سنگ‌کاری':l<=30?'قلعه‌سازی پیشرفته':l<=40?'معماری سلطنتی':'معماری افسانه‌ای')+' • جزئیات ظاهری + سطح قدرت '+l;}
 function troopStats(l){return {hp:l*100,attack:l*12,defense:l*10,climb:l*8,speed:l*7,maneuver:l*9};}
 function troopCard(name,icon,key){const b=state.buildingLevels[key]||1;const l=Math.min(15,Math.ceil(b/4));const s=troopStats(l);return '<div class="tile"><b>'+icon+' '+name+'</b><span>نیرو سطح '+l+'/15</span><br>❤️ جان '+s.hp+' • ⚔️ قدرت '+s.attack+'<br>🛡️ دفاع '+s.defense+' • 🧗 کوه‌نوردی '+s.climb+'<br>💨 سرعت '+s.speed+' • 🔄 مانورپذیری '+s.maneuver+'</div>';}
@@ -149,7 +153,23 @@ function getPlayerId(){
   return id;
 }
 function showPaymentStatus(){
-  msg('سیستم پرداخت به Backend متصل شده؛ برای تراکنش واقعی فقط اتصال درگاه قانونی و کلیدهای آن باقی مانده است.');
+  msg('سیستم پرداخت آزمایشی آماده است؛ تراکنش واقعی هنوز به درگاه قانونی متصل نیست.');
+}
+function simulatePayment(productId){
+  const names={season_pass:'Season Pass',cosmetic_skin:'آیتم ظاهری'};
+  const order='TEST-'+Date.now().toString(36).toUpperCase();
+  const amount=productId==='season_pass'?'قیمت آزمایشی':'قیمت آزمایشی';
+  $('body').innerHTML='<p class="muted">این صفحه فقط شبیه‌ساز پرداخت توسعه است و هیچ پول واقعی جابه‌جا نمی‌کند.</p><div class="tile"><b>🧾 سفارش</b>'+order+'<br>محصول: '+(names[productId]||productId)+'<br>مبلغ: '+amount+'</div>';
+  $('actions').innerHTML='';
+  action('✅ شبیه‌سازی پرداخت موفق',()=>{
+    if(productId==='season_pass'){state.pass=true;state.seasonTokens+=20;}
+    if(productId==='cosmetic_skin'){state.skins++;}
+    state.monetization.passes += productId==='season_pass'?1:0;
+    state.monetization.skins += productId==='cosmetic_skin'?1:0;
+    render(); msg('پرداخت آزمایشی موفق شد؛ سفارش '+order+' ثبت شد. هیچ مبلغ واقعی دریافت نشده است.');
+  });
+  action('❌ شبیه‌سازی پرداخت ناموفق',()=>msg('پرداخت آزمایشی ناموفق شد؛ هیچ آیتمی فعال نشد.'));
+  action('↩️ شبیه‌سازی لغو',()=>msg('پرداخت آزمایشی لغو شد؛ هیچ آیتمی فعال نشد.'));
 }
 
 function show(kind){
@@ -177,6 +197,9 @@ function show(kind){
  action('📜 کمپین داستانی',()=>{state.honor+=7;render();msg('فصل داستانی بعدی باز شد.');});
  action('🏛️ شورای پادشاهی',()=>{state.npcTrust+=1;render();msg('شورای پادشاهی تشکیل شد.');});
  action('🌟 مهارت قهرمان',()=>{state.hero++;state.honor+=4;render();msg('یک مرحله مهارت قهرمان فعال شد.');});
+ action('📊 پروفایل پادشاه',()=>{msg('سطح قهرمان: '+state.hero+' • قلمروها: '+state.territories+' • شهرت: '+state.fame+' • افتخار: '+state.honor+' • فصل: '+state.season);});
+ action('💾 ذخیره پیشرفت',()=>{saveGame();msg('پیشرفت بازی روی همین دستگاه ذخیره شد.');});
+ action('♻️ بازنشانی ذخیره محلی',()=>{if(confirm('ذخیره محلی پاک شود؟')){localStorage.removeItem(SAVE_KEY);location.reload();}});
  action('⚔️ آرایش نیروها',()=>{state.honor+=4;render();msg('آرایش نیروها برای نبرد ذخیره شد.');});
  action('🏳️ دیپلماسی',()=>{state.peace++;state.honor+=5;render();msg('رابطه دیپلماتیک ثبت شد.');});
  action('🚚 کاروان تجارت',()=>{if(spend({food:100,wood:80})){state.gold+=80;render();msg('کاروان تجارت با موفقیت شبیه‌سازی شد.');}else msg('منابع کافی نیست.');});
@@ -190,7 +213,7 @@ function show(kind){
  action('💬 چت اجتماعی',()=>{state.invites++;render();msg('اتصال چت برای نسخه آنلاین آماده است.');});
  action('🧑‍🤝‍🧑 دوستان',()=>{state.invites++;state.honor+=2;render();msg('یک فعالیت دوستانه ثبت شد.');});
  action('🔄 جهان پویا',()=>{state.season++;render();msg('فصل جهان به '+state.season+' تغییر کرد.');});
-} else kind==='features'){
+} else if(kind==='features'){
  $('body').innerHTML+='<div class="grid"><div class="tile"><b>🗺️ نقشه زنده</b>قلمروها تغییر می‌کنند</div><div class="tile"><b>👑 تصمیم پادشاه</b>اثر روی بازی</div><div class="tile"><b>🐉 Boss</b>هیولاهای ویژه</div><div class="tile"><b>🏰 محاصره</b>چندمرحله‌ای</div><div class="tile"><b>🏆 فصل‌ها</b>رقابت ماهانه</div><div class="tile"><b>🎭 NPC</b>اعتماد و رابطه</div><div class="tile"><b>🧭 اکتشاف</b>مناطق مخفی</div><div class="tile"><b>🌦️ آب‌وهوا</b>روز و شب</div><div class="tile"><b>⚔️ تاکتیک</b>سبک‌های مختلف</div><div class="tile"><b>🕊️ دیپلماسی</b>صلح و مذاکره</div><div class="tile"><b>💎 گنج</b>پاداش مخفی</div><div class="tile"><b>🎨 شخصی‌سازی</b>ظاهر پادشاه و قلعه</div><div class="tile"><b>📖 داستان</b>مسیرهای چندشاخه</div><div class="tile"><b>🏛️ Hall of Fame</b>ثبت افتخارات</div><div class="tile"><b>🤝 اتحاد</b>قلمرو مشترک</div><div class="tile"><b>🌍 جهان زنده</b>رویدادهای پویا</div></div>';
  action('🌦️ تغییر آب‌وهوا',()=>{state.weather=state.weather==='صاف'?'بارانی':'صاف';render();msg('آب‌وهوا به '+state.weather+' تغییر کرد.');});
  action('💎 کشف گنج',()=>{state.treasures++;state.gold+=100;state.honor+=6;render();msg('گنج مخفی پیدا شد: ۱۰۰ طلا و ۶ شهرت.');});
@@ -202,12 +225,12 @@ function show(kind){
  action('📖 مسیر داستانی',()=>{state.honor+=10;state.fame+=2;render();msg('یک شاخه داستانی جدید باز شد.');});
  action('🏰 شروع محاصره',()=>{if(spend({wood:100,stone:100})){state.honor+=12;render();msg('مرحله اول محاصره آغاز شد.');}else msg('منابع کافی نیست.');});
 } else if(kind==='city'){
-  $('body').innerHTML='<p class="muted">هر ساختمان از سطح ۱ تا ۵۰ قابل ارتقاست. هر بازه سطحی ظاهر، جزئیات معماری و جلوه متفاوتی دارد.</p><div class="grid">'+
+  $('body').innerHTML='<p class="muted">۱۵ ساختمان اصلی + دیوار پیرامونی؛ همه از سطح ۱ تا ۵۰ قابل ارتقا هستند و با ارتقا، ظاهر و قدرت آن‌ها رشد می‌کند. تولیدات جداگانه تا ۳۰ جایگاه دارند.</p><div class="grid">'+
   buildingCard('castle','قلعه سلطنتی','🏰')+buildingCard('wall','دیوار شهر','🧱')+buildingCard('cityHall','تالار شهر','🏛️')+buildingCard('treasury','خزانه','💰')+
   buildingCard('barracks','پادگان','⚔️')+buildingCard('stable','اصطبل','🐎')+buildingCard('range','میدان تیراندازی','🏹')+buildingCard('university','دانشگاه','🔬')+
-  buildingCard('clinic','درمانگاه','🏥')+buildingCard('siege','کارگاه محاصره','🛠️')+buildingCard('market','بازار','🛒')+buildingCard('spearmen','ساختمان سربازان نیزه‌دار','🔱')+
+  buildingCard('clinic','درمانگاه','🏥')+buildingCard('siege','کارگاه محاصره','🛠️')+buildingCard('market','بازار','🛒')+buildingCard('spearmen','ساختمان سربازان نیزه‌دار','🔱')+buildingCard('embassy','سفارت','🏛️')+buildingCard('hall','تالار افتخارات','🏆')+buildingCard('warehouse','انبار مرکزی','📦')+
   '</div><div class="tile"><b>🌾🪵🪨⛏️ تولیدات</b>۳۰ جایگاه تولیدی؛ هر جایگاه نیز سطح ۱ تا ۵۰ دارد.</div>';
-  const names=[['castle','قلعه سلطنتی'],['wall','دیوار شهر'],['cityHall','تالار شهر'],['treasury','خزانه'],['barracks','پادگان'],['stable','اصطبل'],['range','میدان تیراندازی'],['university','دانشگاه'],['clinic','درمانگاه'],['siege','کارگاه محاصره'],['market','بازار'],['spearmen','ساختمان سربازان نیزه‌دار'],['prodFarm','مزرعه'],['prodWood','کارگاه چوب'],['prodStone','معدن سنگ'],['prodIron','معدن آهن']];
+  const names=[['castle','قلعه سلطنتی'],['wall','دیوار شهر'],['cityHall','تالار شهر'],['treasury','خزانه'],['barracks','پادگان'],['stable','اصطبل'],['range','میدان تیراندازی'],['university','دانشگاه'],['clinic','درمانگاه'],['siege','کارگاه محاصره'],['market','بازار'],['spearmen','ساختمان سربازان نیزه‌دار'],['embassy','سفارت'],['hall','تالار افتخارات'],['warehouse','انبار مرکزی'],['prodFarm','مزرعه'],['prodWood','کارگاه چوب'],['prodStone','معدن سنگ'],['prodIron','معدن آهن']];
   names.forEach(([k,n])=>{if(!state.buildingLevels[k])state.buildingLevels[k]=1;});
 
   names.forEach(([k,n])=>action('⬆️ ارتقای '+n,()=>upgradeBuilding(k,n)));
@@ -248,10 +271,12 @@ function show(kind){
  action('🌐 انتخاب زبان',()=>{msg('بخش انتخاب زبان آماده توسعه برای زبان‌های بیشتر است.');});
  action('🎮 تنظیم کنترل‌ها',()=>{msg('کنترل‌های بازی قابل شخصی‌سازی هستند.');});
  action('🔒 حریم خصوصی',()=>{msg('تنظیمات حریم خصوصی و حساب در این بخش قرار می‌گیرد.');});
+ action('💾 ذخیره بازی',()=>{saveGame();msg('ذخیره محلی انجام شد.');});
+ action('ℹ️ وضعیت نسخه',()=>{msg('Ashen Realms • نسخه آماده توسعه موبایل • پرداخت واقعی عمداً هنوز متصل نشده است.');});
 }else if(kind==='shop'){
  $('body').innerHTML+='<div class="tile"><b>⚙️ موتور خودکار</b>تولید منابع، پاداش روزانه، چرخش فروشگاه و رویدادهای فصلی بدون مدیریت دستی اجرا می‌شوند.</div>'+'<div class="grid"><div class="tile"><b>🎟️ Season Pass</b>پاداش‌های فصلی</div><div class="tile"><b>👑 Royal Pass</b>مأموریت‌های ویژه</div><div class="tile"><b>🎨 فروشگاه ظاهری</b>اسکین و تزئینات</div><div class="tile"><b>📺 تبلیغ اختیاری</b>پاداش انتخابی</div><div class="tile"><b>🏆 فروشگاه فصل</b>آیتم‌های فصلی</div><div class="tile"><b>🤝 بسته اتحاد</b>امکانات اجتماعی</div><div class="tile"><b>🐉 رویداد محدود</b>جایزه ویژه</div><div class="tile"><b>⭐ VIP</b>امکانات رفاهی</div><div class="tile"><b>🎟️ بلیت رویداد</b>ورود به رویداد</div><div class="tile"><b>📅 ورود ۳۰روزه</b>پاداش روزانه</div></div>';
- action('💳 خرید واقعی Season Pass',()=>startRealPayment('season_pass'));
-  action('💳 خرید واقعی آیتم ظاهری',()=>startRealPayment('cosmetic_skin'));
+ action('🧪 پرداخت آزمایشی Season Pass',()=>simulatePayment('season_pass'));
+  action('🧪 پرداخت آزمایشی آیتم ظاهری',()=>simulatePayment('cosmetic_skin'));
   action('🔐 وضعیت اتصال پرداخت',showPaymentStatus);
   action('🎟️ فعال‌سازی Season Pass',()=>{state.pass=true;state.seasonTokens+=20;render();msg('Season Pass فعال شد؛ ۲۰ توکن فصل دریافت شد.');});
  action('🎨 دریافت آیتم ظاهری',()=>{state.skins++;render();msg('یک آیتم ظاهری جدید به مجموعه اضافه شد.');});
@@ -280,6 +305,7 @@ document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',(
 [['hCity','city'],['hWorld','world'],['hBattle','combat'],['hHero','hero'],['hInv','city'],['hAlliance','alliance']].forEach(([id,k])=>$(id).addEventListener('click',()=>show(k)));
 $('close').onclick=()=>$('panel').classList.remove('show');
 $('panel').addEventListener('click',e=>{if(e.target===$('panel'))$('panel').classList.remove('show')});
+loadGame();
 render();
 </script>
 </body></html>
