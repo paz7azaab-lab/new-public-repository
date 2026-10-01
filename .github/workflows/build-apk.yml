@@ -31,6 +31,9 @@ jobs:
         with:
           packages: platform-tools
 
+      - name: Stamp mobile build version
+        run: echo '{"commit":"${{ github.sha }}","run":${{ github.run_number }}}' > public/version.json
+
       - name: Install dependencies
         run: npm install
 
