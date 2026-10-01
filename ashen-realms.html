@@ -19,12 +19,13 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 .panel{position:fixed;inset:0;background:#050b11d9;display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.panel.show{display:flex}.card{width:min(620px,96vw);max-height:90vh;overflow:auto;background:linear-gradient(145deg,#172635,#0a131c);border:1px solid #c59b53;border-radius:18px;padding:20px;box-shadow:0 25px 70px #000d}.card h2{margin:0 0 7px;color:#f2cf86}.muted{color:#bdc7cf;line-height:1.8}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:12px 0}.tile{background:#0c1721;border:1px solid #ffffff18;border-radius:12px;padding:11px}.tile b{display:block;color:#f0d59b;margin-bottom:4px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.close{float:left}.bar{height:9px;background:#1b2a35;border-radius:99px;overflow:hidden;margin-top:6px}.fill{height:100%;width:70%;background:#c59b53}.log{margin-top:12px;padding:10px;border-radius:10px;background:#071019;border:1px solid #ffffff12;min-height:42px}
 @media(max-width:650px){.resources{font-size:11px;gap:7px}.brand{font-size:12px}.top{align-items:flex-start}.bottom .btn{padding:8px 9px;font-size:12px}}
 </style>
-<style id="update-style">
-#updateFab{position:fixed;right:12px;top:50%;z-index:9999;background:#111c27e8;border:1px solid #d0a65a;color:#f7d58f;border-radius:12px;padding:9px 11px;box-shadow:0 8px 25px #0008;font-weight:700}
-#updateFab.new{animation:pulseUpdate 1.2s infinite}
-@keyframes pulseUpdate{50%{transform:scale(1.06);box-shadow:0 0 0 7px #d0a65a22}}
-</style></head>
-<body><button id="updateFab" type="button">🔄 بررسی آپدیت</button>
+</head>
+<body><div id="updateNotice" style="display:none;position:fixed;inset:0;z-index:10000;background:#02070bd9;align-items:center;justify-content:center;padding:18px">
+<div style="width:min(430px,92vw);background:linear-gradient(145deg,#172a38,#08131c);border:1px solid #d0a65a;border-radius:18px;padding:20px;box-shadow:0 25px 80px #000e;text-align:center">
+<div style="font-size:34px">🚀</div><h2 style="color:#f5d38d;margin:8px 0">آپدیت جدید Ashen Realms</h2>
+<p style="color:#d4dce2;line-height:1.8;margin:8px 0 18px">نسخه جدید بازی آماده است. برای دریافت آخرین نسخه، روی «آپدیت» بزن.</p>
+<div style="display:flex;gap:8px;justify-content:center"><button id="updateNow" style="background:#b88a43;border:0;border-radius:10px;padding:11px 22px;color:white;font-weight:800">⬆️ آپدیت</button><button id="updateLater" style="background:#17232d;border:1px solid #ffffff33;border-radius:10px;padding:11px 18px;color:white">بعداً</button></div>
+</div></div>
 <div class="wrap"><div class="game">
 <canvas id="liveWorld"></canvas><div class="liveBadge">🌍 دنیای زنده • ساختمان‌ها، NPCها، آب، نور و قهرمان متحرک</div>
 <style>
@@ -330,11 +331,15 @@ let h=q(state.heroX||0,state.heroY||105);x.fillStyle='#0007';x.beginPath();x.ell
 requestAnimationFrame(frame)}requestAnimationFrame(frame);
 c.addEventListener('pointerdown',e=>{w.d=1;w.lx=e.clientX;w.ly=e.clientY;c.setPointerCapture(e.pointerId)});c.addEventListener('pointermove',e=>{if(w.d){w.ox+=e.clientX-w.lx;w.oy+=e.clientY-w.ly;w.lx=e.clientX;w.ly=e.clientY}});c.addEventListener('pointerup',()=>w.d=0);c.addEventListener('wheel',e=>{e.preventDefault();w.z=Math.max(.65,Math.min(1.55,w.z*(e.deltaY<0?1.08:.92)))},{passive:false})})();
 </script><script id="update-system">
-(()=>{const repo='paz7azaab-lab/new-public-repository',fab=document.getElementById('updateFab');let current=null;
-async function check(){fab.disabled=true;fab.textContent='⏳ بررسی...';try{const v=await fetch('./version.json',{cache:'no-store'}).then(r=>r.ok?r.json():({commit:null,run:0}));current=v;const rel=await fetch('https://api.github.com/repos/'+repo+'/releases/latest',{cache:'no-store'}).then(r=>r.ok?r.json():null);if(!rel){fab.textContent='🔄 بررسی آپدیت';return}
-const newest=rel.target_commitish||((rel.body||'').match(/commit:\s*([0-9a-f]{7,40})/i)||[])[1]||rel.tag_name;
-if(String(newest)===String(v.commit)||String(v.commit||'').startsWith(String(newest))){fab.textContent='✓ آخرین نسخه';fab.classList.remove('new');setTimeout(()=>fab.textContent='🔄 بررسی آپدیت',2200);return}
-fab.textContent='⬆️ نسخه جدید';fab.classList.add('new');fab.onclick=()=>{if(confirm('نسخه جدید Ashen Realms آماده است. صفحه دریافت و نصب باز شود؟'))location.href=rel.html_url}}
-catch(e){fab.textContent='⚠️ خطا؛ دوباره';}finally{fab.disabled=false}}
-fab.onclick=check;check();})();
+(()=>{const box=document.getElementById('updateNotice'),now=document.getElementById('updateNow'),later=document.getElementById('updateLater');
+async function checkUpdate(){try{
+const local=await fetch('./version.json?x='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null);
+const rel=await fetch('https://api.github.com/repos/paz7azaab-lab/new-public-repository/releases/latest?x='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null);
+if(!local||!rel)return;
+const remote=((rel.body||'').match(/commit:\s*([0-9a-f]{7,40})/i)||[])[1]||rel.target_commitish;
+if(remote&&String(remote)!==String(local.commit)){box.style.display='flex';now.onclick=()=>{location.href=rel.html_url};}
+}catch(e){}}
+later.onclick=()=>box.style.display='none';
+setTimeout(checkUpdate,1200);
+})();
 </script></body></html>
