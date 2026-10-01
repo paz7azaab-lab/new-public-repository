@@ -57,6 +57,19 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
+      - name: Re-apply landscape orientation after Capacitor sync
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("android/app/src/main/AndroidManifest.xml")
+          s=p.read_text()
+          if 'android:screenOrientation="landscape"' not in s:
+              s=s.replace('<activity', '<activity android:screenOrientation="landscape"', 1)
+          else:
+              s=s.replace('android:screenOrientation="unspecified"', 'android:screenOrientation="landscape"')
+          p.write_text(s)
+          PY
+
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
