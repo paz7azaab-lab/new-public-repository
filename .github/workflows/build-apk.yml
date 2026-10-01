@@ -42,6 +42,18 @@ jobs:
       - name: Add Android platform
         run: npx cap add android
 
+      - name: Force landscape orientation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("android/app/src/main/AndroidManifest.xml")
+          s=p.read_text()
+          s=s.replace('android:screenOrientation="unspecified"', 'android:screenOrientation="landscape"')
+          if 'android:screenOrientation="landscape"' not in s:
+              s=s.replace('<activity', '<activity android:screenOrientation="landscape"', 1)
+          p.write_text(s)
+          PY
+
       - name: Sync Capacitor
         run: npx cap sync android
 
