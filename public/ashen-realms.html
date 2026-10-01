@@ -20,13 +20,7 @@ button{font:inherit}.wrap{max-width:1280px;margin:auto;padding:10px}.game{positi
 @media(max-width:650px){.resources{font-size:11px;gap:7px}.brand{font-size:12px}.top{align-items:flex-start}.bottom .btn{padding:8px 9px;font-size:12px}}
 </style>
 </head>
-<body><div id="updateNotice" style="display:none;position:fixed;inset:0;z-index:10000;background:#02070bd9;align-items:center;justify-content:center;padding:18px">
-<div style="width:min(430px,92vw);background:linear-gradient(145deg,#172a38,#08131c);border:1px solid #d0a65a;border-radius:18px;padding:20px;box-shadow:0 25px 80px #000e;text-align:center">
-<div style="font-size:34px">🚀</div><h2 style="color:#f5d38d;margin:8px 0">آپدیت جدید Ashen Realms</h2>
-<p style="color:#d4dce2;line-height:1.8;margin:8px 0 18px">نسخه جدید بازی آماده است. برای دریافت آخرین نسخه، روی «آپدیت» بزن.</p>
-<div style="display:flex;gap:8px;justify-content:center"><button id="updateNow" style="background:#b88a43;border:0;border-radius:10px;padding:11px 22px;color:white;font-weight:800">⬆️ آپدیت</button><button id="updateLater" style="background:#17232d;border:1px solid #ffffff33;border-radius:10px;padding:11px 18px;color:white">بعداً</button></div>
-</div></div>
-<div class="wrap"><div class="game">
+<body><div class="wrap"><div class="game">
 <canvas id="liveWorld"></canvas><div class="liveBadge">🌍 دنیای زنده • ساختمان‌ها، NPCها، آب، نور و قهرمان متحرک</div>
 <style>
 #liveWorld{position:absolute;inset:0;width:100%;height:100%;z-index:0;touch-action:none}.hud{z-index:2}.art{display:none}.liveBadge{position:absolute;left:12px;top:58px;z-index:3;background:#071019dd;border:1px solid #c59b53;border-radius:10px;padding:7px 9px;color:#f4d38f;font-size:11px;pointer-events:none}@media(max-width:650px){.liveBadge{top:92px;font-size:9px}}
@@ -330,18 +324,4 @@ P.forEach(p=>{if(Math.hypot(p.x-p.tx,p.y-p.ty)<7){p.tx=Math.random()*570-285;p.t
 let h=q(state.heroX||0,state.heroY||105);x.fillStyle='#0007';x.beginPath();x.ellipse(h.x,h.y+5,13,5,0,0,7);x.fill();x.fillStyle='#252e38';x.fillRect(h.x-7,h.y-25,14,25);x.fillStyle='#94403b';poly([{x:h.x,y:h.y-28},{x:h.x+19,y:h.y+4},{x:h.x+3,y:h.y-2}], '#94403b');x.fillStyle='#d8bf7a';x.beginPath();x.arc(h.x,h.y-31,6,0,7);x.fill();
 requestAnimationFrame(frame)}requestAnimationFrame(frame);
 c.addEventListener('pointerdown',e=>{w.d=1;w.lx=e.clientX;w.ly=e.clientY;c.setPointerCapture(e.pointerId)});c.addEventListener('pointermove',e=>{if(w.d){w.ox+=e.clientX-w.lx;w.oy+=e.clientY-w.ly;w.lx=e.clientX;w.ly=e.clientY}});c.addEventListener('pointerup',()=>w.d=0);c.addEventListener('wheel',e=>{e.preventDefault();w.z=Math.max(.65,Math.min(1.55,w.z*(e.deltaY<0?1.08:.92)))},{passive:false})})();
-</script><script id="update-system">
-(()=>{const box=document.getElementById('updateNotice'),now=document.getElementById('updateNow'),later=document.getElementById('updateLater');
-function versionParts(v){return String(v||'0.0.0').replace(/^v/i,'').split('.').map(n=>parseInt(n,10)||0)}
-function newer(a,b){const x=versionParts(a),y=versionParts(b);for(let i=0;i<3;i++){if(x[i]>y[i])return true;if(x[i]<y[i])return false}return false}
-async function checkUpdate(){try{
-const local=await fetch('./version.json?x='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null);
-const rel=await fetch('https://api.github.com/repos/paz7azaab-lab/new-public-repository/releases/latest?x='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null);
-if(!local||!rel)return;
-const remote=((rel.body||'').match(/game_version:\s*([^\s\n]+)/i)||[])[1]||rel.tag_name;
-if(remote&&newer(remote,local.game_version)){box.style.display='flex';now.onclick=()=>{location.href=rel.html_url};}
-}catch(e){}}
-later.onclick=()=>box.style.display='none';
-setTimeout(checkUpdate,1200);
-})();
 </script></body></html>
