@@ -28,7 +28,7 @@ button{font:inherit}.wrap{width:100%;height:100dvh;max-width:none;margin:0;paddi
 <div class="hud">
 <div class="top">
 <div class="brand">🔥 ASHEN REALMS <span style="font-weight:400">• Living World</span></div>
-<div class="resources"><span>🪵 <b id="wood">1200</b></span><span>🪨 <b id="stone">900</b></span><span>🌾 <b id="food">1500</b></span><span>💰 <b id="gold">320</b></span><span>⭐ <b id="honor">0</b></span></div>
+<div class="resources"><span>🪵 <b id="wood">1200</b></span><span>🪨 <b id="stone">900</b></span><span>⛏️ <b id="iron">600</b></span><span>🌾 <b id="food">1500</b></span><span>💰 <b id="gold">320</b></span><span>⭐ <b id="honor">0</b></span></div>
 <div class="phase" id="phase">☀️ روز • فصل ۱</div>
 </div>
 <button class="hot" id="hCity" aria-label="شهر"></button><button class="hot" id="hWorld" aria-label="جهان"></button><button class="hot" id="hBattle" aria-label="نبرد"></button>
@@ -43,18 +43,18 @@ button{font:inherit}.wrap{width:100%;height:100dvh;max-width:none;margin:0;paddi
 </div></div>
 
 <script>
-const state={wood:1200,stone:900,food:1500,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0,pass:false,vip:false,skins:0,seasonTokens:0,invites:0,eventTickets:0,loginDays:1,productionBuildings:12,troops:{infantry:40,cavalry:25,archers:35,spearmen:30},audio:{enabled:true,started:false},buildingLevels:{castle:1,wall:1,cityHall:1,treasury:1,barracks:1,stable:1,range:1,university:1,clinic:1,siege:1,market:1,spearmen:1,prodFarm:1,prodWood:1,prodStone:1,prodIron:1},automation:{dailyClaimed:false,passive:true,autoEvents:true,autoRotation:true,adReady:true,seasonProgress:0,lastTick:Date.now()},monetization:{skins:0,passes:0,vip:false,eventTickets:0,adRewards:0,referrals:0,shopCycle:1,offers:0}};
+const state={wood:1200,stone:900,food:1500,iron:600,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0,pass:false,vip:false,skins:0,seasonTokens:0,invites:0,eventTickets:0,loginDays:1,productionBuildings:12,troops:{infantry:40,cavalry:25,archers:35,spearmen:30},audio:{enabled:true,started:false},buildingLevels:{castle:1,wall:1,cityHall:1,treasury:1,barracks:1,stable:1,range:1,university:1,clinic:1,siege:1,market:1,spearmen:1,prodFarm:1,prodWood:1,prodStone:1,prodIron:1},automation:{dailyClaimed:false,passive:true,autoEvents:true,autoRotation:true,adReady:true,seasonProgress:0,lastTick:Date.now()},monetization:{skins:0,passes:0,vip:false,eventTickets:0,adRewards:0,referrals:0,shopCycle:1,offers:0}};
 const $=id=>document.getElementById(id);
 const SAVE_KEY='ashen_realms_save_v1';
 function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));}catch(e){}}
 function loadGame(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return;const saved=JSON.parse(raw);Object.assign(state,saved);state.buildingLevels=Object.assign({},state.buildingLevels,saved.buildingLevels||{});state.automation=Object.assign({},state.automation,saved.automation||{});state.monetization=Object.assign({},state.monetization,saved.monetization||{});}catch(e){}}
 
-function render(){['wood','stone','food','gold','honor'].forEach(k=>$(k).textContent=Math.floor(state[k]));$('phase').textContent=(state.night?'🌙 شب':'☀️ روز')+' • فصل '+state.season+' • '+(state.automation.passive?'⚙️ خودکار':'⏸️ متوقف');saveGame();}
+function render(){['wood','stone','iron','food','gold','honor'].forEach(k=>$(k).textContent=Math.floor(state[k]));$('phase').textContent=(state.night?'🌙 شب':'☀️ روز')+' • فصل '+state.season+' • '+(state.automation.passive?'⚙️ خودکار':'⏸️ متوقف');saveGame();}
 function levelVisual(l){return 'ظاهر اختصاصی سطح '+l+' • '+(l<=10?'چوب و سنگ':l<=20?'سنگ‌کاری':l<=30?'قلعه‌سازی پیشرفته':l<=40?'معماری سلطنتی':'معماری افسانه‌ای')+' • جزئیات ظاهری + سطح قدرت '+l;}
 function troopStats(l){return {hp:l*100,attack:l*12,defense:l*10,climb:l*8,speed:l*7,maneuver:l*9};}
 function troopCard(name,icon,key){const b=state.buildingLevels[key]||1;const l=Math.min(15,Math.ceil(b/4));const s=troopStats(l);return '<div class="tile"><b>'+icon+' '+name+'</b><span>نیرو سطح '+l+'/15</span><br>❤️ جان '+s.hp+' • ⚔️ قدرت '+s.attack+'<br>🛡️ دفاع '+s.defense+' • 🧗 کوه‌نوردی '+s.climb+'<br>💨 سرعت '+s.speed+' • 🔄 مانورپذیری '+s.maneuver+'</div>';}
 function buildingCard(key,name,icon){const l=state.buildingLevels[key]||1;return '<div class="tile"><b>'+icon+' '+name+'</b><span>سطح '+l+'/50</span><br><small>'+levelVisual(l)+'</small></div>';}
-function upgradeBuilding(key,name){const l=state.buildingLevels[key]||1;if(l>=50){msg(name+' به حداکثر سطح ۵۰ رسیده است.');return;}const cost={wood:Math.ceil(60+l*18),stone:Math.ceil(45+l*15),gold:Math.ceil(10+l*3)};if(spend(cost)){state.buildingLevels[key]=l+1;state.honor+=2;render();msg(name+' به سطح '+(l+1)+' ارتقا یافت؛ ظاهر آن تغییر کرد.');}else msg('منابع کافی نیست.');}
+function upgradeBuilding(key,name){buildingSound(key);const l=state.buildingLevels[key]||1;if(l>=50){msg(name+' به حداکثر سطح ۵۰ رسیده است.');return;}const cost={wood:Math.ceil(60+l*18),stone:Math.ceil(45+l*15),gold:Math.ceil(10+l*3)};if(spend(cost)){state.buildingLevels[key]=l+1;state.honor+=2;render();msg(name+' به سطح '+(l+1)+' ارتقا یافت؛ ظاهر آن تغییر کرد.');}else msg('منابع کافی نیست.');}
 function spend(cost){for(const k in cost)if(state[k]<cost[k])return false;for(const k in cost)state[k]-=cost[k];return true}
 function systems24(){return [
 '🧬 درخت فناوری: شاخه‌های اقتصاد، دفاع، توسعه و نیروها با پژوهش مرحله‌ای',
@@ -148,7 +148,7 @@ function automationTick(){
   const a=state.automation; const m=state.monetization;
   if(a.passive){
     const o=productionOutput();
-    state.food+=Math.floor(o.food/6); state.wood+=Math.floor(o.wood/6); state.stone+=Math.floor(o.stone/6);
+    state.food+=Math.floor(o.food/6); state.wood+=Math.floor(o.wood/6); state.stone+=Math.floor(o.stone/6); state.iron+=Math.floor(o.iron/6);
     state.gold+=Math.floor((state.buildingLevels.market||1)/20);
     state.energy=Math.min(100,state.energy+1);
     state.automation.seasonProgress+=1;
