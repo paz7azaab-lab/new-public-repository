@@ -18,6 +18,8 @@ button{font:inherit}.wrap{width:100%;height:100dvh;max-width:none;margin:0;paddi
 #hHero{left:1%;top:58%;width:36%;height:20%}#hInv{left:37%;top:58%;width:30%;height:20%}#hAlliance{left:67%;top:58%;width:33%;height:20%}
 .panel{position:fixed;inset:0;background:#050b11d9;display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.panel.show{display:flex}.card{width:min(620px,96vw);max-height:90vh;overflow:auto;background:linear-gradient(145deg,#172635,#0a131c);border:1px solid #c59b53;border-radius:18px;padding:20px;box-shadow:0 25px 70px #000d}.card h2{margin:0 0 7px;color:#f2cf86}.muted{color:#bdc7cf;line-height:1.8}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:12px 0}.tile{background:#0c1721;border:1px solid #ffffff18;border-radius:12px;padding:11px}.tile b{display:block;color:#f0d59b;margin-bottom:4px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.close{float:left}.bar{height:9px;background:#1b2a35;border-radius:99px;overflow:hidden;margin-top:6px}.fill{height:100%;width:70%;background:#c59b53}.log{margin-top:12px;padding:10px;border-radius:10px;background:#071019;border:1px solid #ffffff12;min-height:42px}
 @media(max-width:650px){.resources{font-size:11px;gap:7px}.brand{font-size:12px}.top{align-items:flex-start}.bottom .btn{padding:8px 9px;font-size:12px}}
+
+.profile-pick{position:fixed;inset:0;background:#03080edb;z-index:50;display:none;align-items:center;justify-content:center;padding:18px}.profile-pick.show{display:flex}.profile-card{width:min(760px,96vw);max-height:92vh;overflow:auto;background:linear-gradient(145deg,#182938,#08121b);border:1px solid #c59b53;border-radius:22px;padding:20px;box-shadow:0 25px 80px #000e}.profile-card h2{color:#f3d28d;margin:0 0 6px}.profile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.profile-option{border:1px solid #ffffff1c;background:#0c1721;border-radius:16px;padding:10px;text-align:center;color:#fff;cursor:pointer}.profile-option.selected{border-color:#e0b65f;box-shadow:0 0 0 2px #e0b65f55}.profile-avatar{width:68px;height:68px;margin:auto;border-radius:50%;border:2px solid #c59b53;background:linear-gradient(145deg,#314b62,#111923);display:flex;align-items:center;justify-content:center;font-size:30px;overflow:hidden}.profile-avatar.ariyan{background-image:url('https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5e1ebf60e4fb2011301965b7c1d1b755e0d8e781c67864e6e62e6a8d36766ec2.png');background-size:650px auto;background-position:left top}.profile-option b{display:block;margin-top:7px;color:#f0d59b}.profile-option small{color:#aebbc4}.profile-mini{display:inline-flex;align-items:center;gap:7px;cursor:pointer}.profile-mini .mini-avatar{width:30px;height:30px;border-radius:50%;border:1px solid #c59b53;background:#243746;display:inline-flex;align-items:center;justify-content:center;font-size:14px;overflow:hidden}.profile-mini .mini-avatar.ariyan{background-image:url('https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5e1ebf60e4fb2011301965b7c1d1b755e0d8e781c67864e6e62e6a8d36766ec2.png');background-size:300px auto;background-position:left top}@media(max-width:650px){.profile-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body><div class="wrap"><div class="game">
@@ -27,7 +29,7 @@ button{font:inherit}.wrap{width:100%;height:100dvh;max-width:none;margin:0;paddi
 </style>
 <div class="hud">
 <div class="top">
-<div class="brand">🔥 ASHEN REALMS <span style="font-weight:400">• Living World</span></div>
+<div class="brand"><span class="profile-mini" id="profileMini"><span class="mini-avatar" id="miniAvatar">👑</span><span id="profileName">KingAriyan</span></span> <span style="font-weight:400">• ASHEN REALMS</span></div>
 <div class="resources"><span>🪵 <b id="wood">1200</b></span><span>🪨 <b id="stone">900</b></span><span>⛏️ <b id="iron">600</b></span><span>🌾 <b id="food">1500</b></span><span>💰 <b id="gold">320</b></span><span>⭐ <b id="honor">0</b></span></div>
 <div class="phase" id="phase">☀️ روز • فصل ۱</div>
 </div>
@@ -38,16 +40,54 @@ button{font:inherit}.wrap{width:100%;height:100dvh;max-width:none;margin:0;paddi
 </div></div>
 </div></div>
 
+<div class="profile-pick" id="profilePick"><div class="profile-card">
+<h2>👑 پادشاهی خودت را بساز</h2><div class="muted">قبل از ورود، یک پروفایل و اسکین برای پادشاهت انتخاب کن. این انتخاب در بازی ذخیره می‌شود.</div>
+<div class="profile-grid" id="profileGrid"></div>
+<div class="actions"><button class="btn" id="profileConfirm">ورود به پادشاهی</button></div>
+</div></div>
 <div class="panel" id="panel"><div class="card">
 <button class="btn close" id="close">بستن</button><h2 id="title"></h2><div id="body"></div><div class="actions" id="actions"></div><div class="log" id="log" aria-live="polite"></div>
 </div></div>
 
 <script>
-const state={wood:1200,stone:900,food:1500,iron:600,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0,pass:false,vip:false,skins:0,seasonTokens:0,invites:0,eventTickets:0,loginDays:1,productionBuildings:12,troops:{infantry:40,cavalry:25,archers:35,spearmen:30},audio:{enabled:true,started:false},buildingLevels:{castle:1,wall:1,cityHall:1,treasury:1,barracks:1,stable:1,range:1,university:1,clinic:1,siege:1,market:1,spearmen:1,prodFarm:1,prodWood:1,prodStone:1,prodIron:1},automation:{dailyClaimed:false,passive:true,autoEvents:true,autoRotation:true,adReady:true,seasonProgress:0,lastTick:Date.now()},monetization:{skins:0,passes:0,vip:false,eventTickets:0,adRewards:0,referrals:0,shopCycle:1,offers:0}};
+const state={profile:null,wood:1200,stone:900,food:1500,iron:600,gold:320,honor:0,hero:1,energy:100,castle:1,territories:1,alliance:false,night:false,season:1,weather:'صاف',treasures:0,peace:0,npcTrust:0,style:'کلاسیک',fame:0,pass:false,vip:false,skins:0,seasonTokens:0,invites:0,eventTickets:0,loginDays:1,productionBuildings:12,troops:{infantry:40,cavalry:25,archers:35,spearmen:30},audio:{enabled:true,started:false},buildingLevels:{castle:1,wall:1,cityHall:1,treasury:1,barracks:1,stable:1,range:1,university:1,clinic:1,siege:1,market:1,spearmen:1,prodFarm:1,prodWood:1,prodStone:1,prodIron:1},automation:{dailyClaimed:false,passive:true,autoEvents:true,autoRotation:true,adReady:true,seasonProgress:0,lastTick:Date.now()},monetization:{skins:0,passes:0,vip:false,eventTickets:0,adRewards:0,referrals:0,shopCycle:1,offers:0}};
 const $=id=>document.getElementById(id);
 const SAVE_KEY='ashen_realms_save_v1';
 function saveGame(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));}catch(e){}}
 function loadGame(){try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return;const saved=JSON.parse(raw);Object.assign(state,saved);state.buildingLevels=Object.assign({},state.buildingLevels,saved.buildingLevels||{});state.automation=Object.assign({},state.automation,saved.automation||{});state.monetization=Object.assign({},state.monetization,saved.monetization||{});}catch(e){}}
+
+
+const PROFILE_LIST=[
+ {id:'ariyan',name:'KingAriyan',skin:'سلطنتی آبی',icon:'👑',cls:'ariyan'},
+ {id:'alina',name:'Queen Alina',skin:'نگهبان سپیده',icon:'🦅'},
+ {id:'darian',name:'Lord Darian',skin:'فرمانروای سنگ',icon:'🛡️'},
+ {id:'soren',name:'Soren',skin:'سوار مهتاب',icon:'🌙'},
+ {id:'lyra',name:'Lyra',skin:'بانوی جنگل',icon:'🌿'},
+ {id:'kael',name:'Kael',skin:'پادشاه آتش',icon:'🔥'}
+];
+function applyProfile(p){
+ state.profile=p.id;
+ $('profileName').textContent=p.name;
+ const a=$('miniAvatar');a.textContent=p.icon;a.className='mini-avatar '+(p.cls||'');
+}
+function openProfilePicker(){
+ const grid=$('profileGrid');grid.innerHTML='';
+ const current=state.profile||'ariyan';
+ PROFILE_LIST.forEach(p=>{
+   const d=document.createElement('button');d.type='button';d.className='profile-option'+(p.id===current?' selected':'');
+   d.innerHTML='<span class="profile-avatar '+(p.cls||'')+'">'+(p.cls==='ariyan'?'':p.icon)+'</span><b>'+p.name+'</b><small>'+p.skin+'</small>';
+   d.onclick=()=>{applyProfile(p);grid.querySelectorAll('.profile-option').forEach(x=>x.classList.remove('selected'));d.classList.add('selected');};
+   grid.appendChild(d);
+ });
+ $('profilePick').classList.add('show');
+}
+function initProfile(){
+ const saved=PROFILE_LIST.find(p=>p.id===state.profile)||PROFILE_LIST[0];
+ applyProfile(saved);
+ if(!localStorage.getItem('ashen_profile_selected')) openProfilePicker();
+}
+$('profileMini').onclick=openProfilePicker;
+$('profileConfirm').onclick=()=>{localStorage.setItem('ashen_profile_selected','1');$('profilePick').classList.remove('show');saveGame();msg('پروفایل '+$('profileName').textContent+' انتخاب شد.');};
 
 function render(){['wood','stone','iron','food','gold','honor'].forEach(k=>$(k).textContent=Math.floor(state[k]));$('phase').textContent=(state.night?'🌙 شب':'☀️ روز')+' • فصل '+state.season+' • '+(state.automation.passive?'⚙️ خودکار':'⏸️ متوقف');saveGame();}
 function levelVisual(l){return 'ظاهر اختصاصی سطح '+l+' • '+(l<=10?'چوب و سنگ':l<=20?'سنگ‌کاری':l<=30?'قلعه‌سازی پیشرفته':l<=40?'معماری سلطنتی':'معماری افسانه‌ای')+' • جزئیات ظاهری + سطح قدرت '+l;}
@@ -370,10 +410,12 @@ $('close').onclick=()=>$('panel').classList.remove('show');
 $('panel').addEventListener('click',e=>{if(e.target===$('panel'))$('panel').classList.remove('show')});
 loadGame();
 render();
+initProfile();
 </script>
 <script>
 (()=>{const c=document.getElementById('liveWorld'),x=c.getContext('2d'),w={z:1,ox:0,oy:0,d:0,lx:0,ly:0},B=[['castle','قلعه',0,-80,150,110],['market','بازار',-190,55,105,70],['university','دانشگاه',190,45,105,78],['barracks','پادگان',-55,145,115,70],['farm','مزرعه',125,145,110,65],['tower','برج',285,-55,58,105],['tower2','برج',-285,-55,58,105]],P=Array.from({length:22},(_,i)=>({x:Math.random()*580-290,y:Math.random()*250-60,tx:0,ty:0,p:Math.random()*9}));
 function rs(){let d=Math.min(2,devicePixelRatio||1);c.width=innerWidth*d;c.height=innerHeight*d;c.style.width='100%';c.style.height='100%';x.setTransform(d,0,0,d,0,0)}addEventListener('resize',rs);rs();
+const cityArt=new Image();cityArt.crossOrigin='anonymous';cityArt.src='https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5e1ebf60e4fb2011301965b7c1d1b755e0d8e781c67864e6e62e6a8d36766ec2.png';
 const q=(a,b)=>({x:innerWidth/2+w.ox+a*w.z,y:innerHeight/2+w.oy+b*w.z});
 const PROD_POS=Array.from({length:30},(_,i)=>{const a=(Math.PI*2*i/30)-Math.PI/2;return {x:Math.cos(a)*((i%2?430:500)),y:Math.sin(a)*((i%2?230:275))};});
 function drawProductionBuildings(){
@@ -390,7 +432,7 @@ function drawProductionBuildings(){
   });
 }
 function poly(a,f){x.beginPath();a.forEach((p,i)=>i?x.lineTo(p.x,p.y):x.moveTo(p.x,p.y));x.closePath();x.fillStyle=f;x.fill()}
-function frame(t){let night=state.night,g=x.createLinearGradient(0,0,0,innerHeight);g.addColorStop(0,night?'#07111e':'#41667d');g.addColorStop(.65,night?'#14263a':'#b9c7bc');g.addColorStop(1,'#15251d');x.fillStyle=g;x.fillRect(0,0,innerWidth,innerHeight);
+function frame(t){let night=state.night;if(cityArt.complete&&cityArt.naturalWidth){const sw=cityArt.naturalWidth,sh=Math.min(cityArt.naturalHeight,920),scale=Math.max(innerWidth/sw,innerHeight/sh),dw=sw*scale,dh=sh*scale;x.drawImage(cityArt,0,0,sw,sh,(innerWidth-dw)/2,(innerHeight-dh)/2,dw,dh)}else{x.fillStyle='#071019';x.fillRect(0,0,innerWidth,innerHeight)};if(!cityArt.complete||!cityArt.naturalWidth){g.addColorStop(0,night?'#07111e':'#41667d');g.addColorStop(.65,night?'#14263a':'#b9c7bc');g.addColorStop(1,'#15251d');x.fillStyle=g;x.fillRect(0,0,innerWidth,innerHeight);}
 for(let i=0;i<8;i++){let xx=((i*220-t*.012)%innerWidth)-100;poly([{x:xx,y:160},{x:xx+110,y:55+i%3*25},{x:xx+250,y:160}],night?'#18283a':'#647b86')}
 let gnd=q(0,30);x.fillStyle=night?'#27312f':'#7d9078';x.beginPath();x.ellipse(gnd.x,gnd.y,445*w.z,235*w.z,0,0,7);x.fill();x.strokeStyle='#c0a36a';x.lineWidth=3;x.stroke();
 let a=q(-480,100),b=q(480,205);x.strokeStyle=night?'#4c9ab9':'#5bb9ca';x.lineWidth=17;x.beginPath();x.moveTo(a.x,a.y);x.bezierCurveTo(a.x+240*w.z,a.y-55*w.z,b.x-240*w.z,b.y+45*w.z,b.x,b.y);x.stroke();
