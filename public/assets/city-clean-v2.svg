@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="864" viewBox="0 0 1536 864">
+<defs>
+  <linearGradient id="cover" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#071019" stop-opacity="0.995"/>
+    <stop offset="0.72" stop-color="#071019" stop-opacity="0.985"/>
+    <stop offset="1" stop-color="#071019" stop-opacity="0.94"/>
+  </linearGradient>
+</defs>
+<image href="https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5e1ebf60e4fb2011301965b7c1d1b755e0d8e781c67864e6e62e6a8d36766ec2.png?v=20261005" x="0" y="0" width="1536" height="864" preserveAspectRatio="none"/>
+<path d="M120 752 H520 V816 H120 Z" fill="url(#cover)"/>
+</svg>
