@@ -415,7 +415,7 @@ initProfile();
 <script>
 (()=>{const c=document.getElementById('liveWorld'),x=c.getContext('2d'),w={z:1,ox:0,oy:0,d:0,lx:0,ly:0},B=[['castle','قلعه',0,-80,150,110],['market','بازار',-190,55,105,70],['university','دانشگاه',190,45,105,78],['barracks','پادگان',-55,145,115,70],['farm','مزرعه',125,145,110,65],['tower','برج',285,-55,58,105],['tower2','برج',-285,-55,58,105]],P=Array.from({length:22},(_,i)=>({x:Math.random()*580-290,y:Math.random()*250-60,tx:0,ty:0,p:Math.random()*9}));
 function rs(){let d=Math.min(2,devicePixelRatio||1);c.width=innerWidth*d;c.height=innerHeight*d;c.style.width='100%';c.style.height='100%';x.setTransform(d,0,0,d,0,0)}addEventListener('resize',rs);rs();
-const cityArt=new Image();cityArt.crossOrigin='anonymous';cityArt.src='./assets/city-clean-v2.svg';
+const cityArt=new Image();cityArt.crossOrigin='anonymous';cityArt.src='./assets/city-clean.png';
 const q=(a,b)=>({x:innerWidth/2+w.ox+a*w.z,y:innerHeight/2+w.oy+b*w.z});
 const PROD_POS=Array.from({length:30},(_,i)=>{const a=(Math.PI*2*i/30)-Math.PI/2;return {x:Math.cos(a)*((i%2?430:500)),y:Math.sin(a)*((i%2?230:275))};});
 function drawProductionBuildings(){
