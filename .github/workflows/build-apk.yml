@@ -99,7 +99,7 @@ jobs:
           p.write_text(s)
           PY
 
-      - name: Verify bundled city image
+      - name: Verify bundled city image before build
         run: |
           test -f public/assets/city-clean.png
           file public/assets/city-clean.png
@@ -108,10 +108,15 @@ jobs:
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
 
-      - name: Verify city image is inside APK
+      - name: Verify final APK contains the new city PNG
         run: |
-          unzip -l android/app/build/outputs/apk/debug/app-debug.apk | grep -E 'assets/public/assets/city-clean\.png'
-          test $(unzip -p android/app/build/outputs/apk/debug/app-debug.apk assets/public/assets/city-clean.png | wc -c) -gt 100000
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -f "$APK"
+          unzip -l "$APK" | grep -E 'assets/public/assets/city-clean\.png'
+          SIZE=$(unzip -p "$APK" assets/public/assets/city-clean.png | wc -c)
+          echo "Bundled city PNG bytes in APK: $SIZE"
+          test "$SIZE" -gt 100000
+          sha256sum "$APK"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
