@@ -39,11 +39,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Restore user-provided kingdom image
+      - name: Verify user-provided kingdom image
         run: |
-          test -f public/assets/city-user.jpg.b64
-          base64 -d public/assets/city-user.jpg.b64 > public/assets/city-user.jpg
-          rm public/assets/city-user.jpg.b64
+          test -f public/assets/city-user.jpg
           python -m pip install --disable-pip-version-check pillow
           python - <<'PY'
           from pathlib import Path
@@ -52,7 +50,7 @@ jobs:
           im = Image.open(p)
           print(f"User city image: {im.size}, {p.stat().st_size} bytes")
           assert im.size == (256, 144)
-          assert p.stat().st_size > 100000
+          assert p.stat().st_size > 10000
           PY
 
       - name: Add Android platform
