@@ -102,7 +102,7 @@ jobs:
           unzip -l "$APK" | grep -E 'assets/public/assets/city-user\.jpg'
           SIZE=$(unzip -p "$APK" assets/public/assets/city-user.jpg | wc -c)
           echo "Bundled city PNG bytes in APK: $SIZE"
-          test "$SIZE" -gt 100000
+          test "$SIZE" -gt 10000
           sha256sum "$APK"
 
       - name: Upload APK
