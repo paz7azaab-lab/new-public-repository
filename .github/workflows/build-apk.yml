@@ -39,33 +39,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Create bundled clean city image
+      - name: Restore user-provided kingdom image
         run: |
-          python -m pip install --disable-pip-version-check pillow opencv-python-headless
+          test -f public/assets/city-user.jpg.b64
+          base64 -d public/assets/city-user.jpg.b64 > public/assets/city-user.jpg
+          rm public/assets/city-user.jpg.b64
+          python -m pip install --disable-pip-version-check pillow
           python - <<'PY'
           from pathlib import Path
-          from urllib.request import Request, urlopen
-          import cv2
-          import numpy as np
-
-          url = "https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5e1ebf60e4fb2011301965b7c1d1b755e0d8e781c67864e6e62e6a8d36766ec2.png"
-          req = Request(url, headers={"User-Agent": "Mozilla/5.0"})
-          data = urlopen(req, timeout=60).read()
-          src = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
-          if src is None:
-              raise RuntimeError("Could not decode source city image")
-          if src.shape[1] != 1536 or src.shape[0] != 864:
-              src = cv2.resize(src, (1536, 864), interpolation=cv2.INTER_LANCZOS4)
-
-          mask = np.zeros(src.shape[:2], dtype=np.uint8)
-          cv2.rectangle(mask, (175, 775), (500, 803), 255, -1)
-          clean = cv2.inpaint(src, mask, 5, cv2.INPAINT_TELEA)
-
-          out = Path("public/assets/city-clean.png")
-          out.parent.mkdir(parents=True, exist_ok=True)
-          if not cv2.imwrite(str(out), clean, [cv2.IMWRITE_PNG_COMPRESSION, 9]):
-              raise RuntimeError("Could not write bundled city image")
-          print(f"Bundled {out} ({out.stat().st_size} bytes)")
+          from PIL import Image
+          p = Path("public/assets/city-user.jpg")
+          im = Image.open(p)
+          print(f"User city image: {im.size}, {p.stat().st_size} bytes")
+          assert im.size == (1024, 576)
+          assert p.stat().st_size > 100000
           PY
 
       - name: Add Android platform
@@ -99,21 +86,21 @@ jobs:
           p.write_text(s)
           PY
 
-      - name: Verify bundled city image before build
+      - name: Verify user-provided city image before build
         run: |
-          test -f public/assets/city-clean.png
-          file public/assets/city-clean.png
+          test -f public/assets/city-user.jpg
+          file public/assets/city-user.jpg
 
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
 
-      - name: Verify final APK contains the new city PNG
+      - name: Verify final APK contains the user-provided city image
         run: |
           APK="android/app/build/outputs/apk/debug/app-debug.apk"
           test -f "$APK"
-          unzip -l "$APK" | grep -E 'assets/public/assets/city-clean\.png'
-          SIZE=$(unzip -p "$APK" assets/public/assets/city-clean.png | wc -c)
+          unzip -l "$APK" | grep -E 'assets/public/assets/city-user\.jpg'
+          SIZE=$(unzip -p "$APK" assets/public/assets/city-user.jpg | wc -c)
           echo "Bundled city PNG bytes in APK: $SIZE"
           test "$SIZE" -gt 100000
           sha256sum "$APK"
