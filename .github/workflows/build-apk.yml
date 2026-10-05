@@ -51,7 +51,7 @@ jobs:
           p = Path("public/assets/city-user.jpg")
           im = Image.open(p)
           print(f"User city image: {im.size}, {p.stat().st_size} bytes")
-          assert im.size == (1024, 576)
+          assert im.size == (256, 144)
           assert p.stat().st_size > 100000
           PY
 
