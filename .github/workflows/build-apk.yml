@@ -45,7 +45,8 @@ jobs:
           python -m pip install --disable-pip-version-check pillow
           python - <<'PY'
           from pathlib import Path
-          from PIL import Image
+          from PIL import Image, ImageFile
+          ImageFile.LOAD_TRUNCATED_IMAGES = True
           p = Path("public/assets/city-user.jpg")
           im = Image.open(p)
           print(f"User city image: {im.size}, {p.stat().st_size} bytes")
@@ -53,8 +54,8 @@ jobs:
           assert p.stat().st_size > 10000
           if im.size != (1536, 864):
               im = im.resize((1536, 864), Image.Resampling.LANCZOS)
-              im.save(p, quality=95, subsampling=0)
-              print(f"Upscaled bundled city image to {im.size}")
+          im.save(p, "JPEG", quality=95, subsampling=0, optimize=True)
+          print(f"Normalized city image to {im.size}, {p.stat().st_size} bytes")
           PY
 
       - name: Add Android platform
@@ -93,8 +94,9 @@ jobs:
           test -f public/assets/city-user.jpg
           file public/assets/city-user.jpg
           python - <<'PY'
-          from PIL import Image
+          from PIL import Image, ImageFile
           from pathlib import Path
+          ImageFile.LOAD_TRUNCATED_IMAGES = True
           p=Path("public/assets/city-user.jpg")
           im=Image.open(p)
           assert im.size == (1536,864), im.size
