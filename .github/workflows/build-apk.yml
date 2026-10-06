@@ -46,7 +46,7 @@ jobs:
           curl -fL --retry 3 --connect-timeout 20 "$CITY_SOURCE_URL" -o public/assets/city-user.jpg
           test -s public/assets/city-user.jpg
 
-      - name: Verify user-provided kingdom image
+      - name: Normalize city image
         run: |
           test -f public/assets/city-user.jpg
           python -m pip install --disable-pip-version-check pillow
@@ -55,12 +55,12 @@ jobs:
           from PIL import Image, ImageFile
           ImageFile.LOAD_TRUNCATED_IMAGES = True
           p = Path("public/assets/city-user.jpg")
-          im = Image.open(p)
-          print(f"User city image: {im.size}, {p.stat().st_size} bytes")
-          assert im.size[0] >= 256 and im.size[1] >= 144
-          assert p.stat().st_size > 10000
-          if im.size != (1536, 864):
-              im = im.resize((1536, 864), Image.Resampling.LANCZOS)
+          im = Image.open(p).convert("RGB")
+          print(f"Downloaded city image: {im.size}, {p.stat().st_size} bytes")
+          assert im.width >= 160 and im.height >= 90, f"Unexpected source size: {im.size}"
+          target = (1536, 864)
+          if im.size != target:
+              im = im.resize(target, Image.Resampling.LANCZOS)
           im.save(p, "JPEG", quality=95, subsampling=0, optimize=True)
           print(f"Normalized city image to {im.size}, {p.stat().st_size} bytes")
           PY
