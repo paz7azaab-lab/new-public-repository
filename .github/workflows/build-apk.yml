@@ -49,8 +49,12 @@ jobs:
           p = Path("public/assets/city-user.jpg")
           im = Image.open(p)
           print(f"User city image: {im.size}, {p.stat().st_size} bytes")
-          assert im.size == (256, 144)
+          assert im.size[0] >= 256 and im.size[1] >= 144
           assert p.stat().st_size > 10000
+          if im.size != (1536, 864):
+              im = im.resize((1536, 864), Image.Resampling.LANCZOS)
+              im.save(p, quality=95, subsampling=0)
+              print(f"Upscaled bundled city image to {im.size}")
           PY
 
       - name: Add Android platform
@@ -88,6 +92,14 @@ jobs:
         run: |
           test -f public/assets/city-user.jpg
           file public/assets/city-user.jpg
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          p=Path("public/assets/city-user.jpg")
+          im=Image.open(p)
+          assert im.size == (1536,864), im.size
+          print(f"Final city image: {im.size}, {p.stat().st_size} bytes")
+          PY
 
       - name: Build debug APK
         working-directory: android
@@ -99,7 +111,7 @@ jobs:
           test -f "$APK"
           unzip -l "$APK" | grep -E 'assets/public/assets/city-user\.jpg'
           SIZE=$(unzip -p "$APK" assets/public/assets/city-user.jpg | wc -c)
-          echo "Bundled city PNG bytes in APK: $SIZE"
+          echo "Bundled city image bytes in APK: $SIZE"
           test "$SIZE" -gt 10000
           sha256sum "$APK"
 
