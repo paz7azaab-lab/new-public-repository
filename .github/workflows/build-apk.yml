@@ -41,7 +41,7 @@ jobs:
 
       - name: Refresh city image from uploaded source
         env:
-          CITY_SOURCE_URL: 'https://media.canva.com/v2/image-resize/format:JPEG/height:941/quality:100/uri:ifs%3A%2F%2FM%2F5ec86572-7963-4b3f-89c2-bcf19eab133e/watermark:F/width:1672?csig=AAAAAAAAAAAAAAAAAAAAALCtdTJN3zEp5grAszxTK9LgxGCzXszENlyRXXx-Kc1q&exp=1791303778&osig=AAAAAAAAAAAAAAAAAAAAAIb6u6WARVV-x5el_6PH3d0XiRPGm8kjNeOZOJJsyA3x&signer=media-rpc&token=AAIAAU0AJDVlYzg2NTcyLTc5NjMtNGIzZi04OWMyLWJjZjE5ZWFiMTMzZQAAAAABoRIGftBKX3gi1ceCM66JBs1gX3ZqkqXl43NSQAY49tJkKNNQuw&x-canva-quality=thumbnail'
+          CITY_SOURCE_URL: 'https://media.canva.com/v2/image-resize/format:JPEG/height:941/quality:100/uri:ifs%3A%2F%2FM%2F4a7f773c-aa8d-4300-aefc-8347002018b6/watermark:F/width:1672?csig=AAAAAAAAAAAAAAAAAAAAAMWXUqUQ0-JpgVoyYz2C-QCtwc_gD5r734WwM3g7IUwL&exp=1791305872&osig=AAAAAAAAAAAAAAAAAAAAALS2Din5BWuDqOfD3DbB6DF6GQPafMOHQ_mSGVgNll74&signer=media-rpc&token=AAIAAU0AJDRhN2Y3NzNjLWFhOGQtNDMwMC1hZWZjLTgzNDcwMDIwMThiNgAAAAABoRImcoDVOeHDGM_gffpScojOHbIsWI3ajNheacHKBZlAKPKe3w&x-canva-quality=thumbnail'
         run: |
           curl -fL --retry 3 --connect-timeout 20 "$CITY_SOURCE_URL" -o public/assets/city-user.jpg
           test -s public/assets/city-user.jpg
