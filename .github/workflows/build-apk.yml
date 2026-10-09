@@ -40,10 +40,10 @@ jobs:
         run: npm install
 
       - name: Refresh city image from uploaded source
-        env:
-          CITY_SOURCE_URL: 'https://media.canva.com/v2/image-resize/format:PNG/height:112/quality:100/uri:ifs%3A%2F%2FM%2Fe928ae99-867f-41ea-9f95-9e0b9851ae50/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAJlZ0s4UzTTqDHDY9W-gp0bfyaErU3k8UgodjB3QkC3d&exp=1791307510&osig=AAAAAAAAAAAAAAAAAAAAAH95uDe1-4Wjyc5s33rI8zItNvgKk-KNCt-fKuwDruED&signer=media-rpc&token=AAIAAU0AJGU5MjhhZTk5LTg2N2YtNDFlYS05Zjk1LTllMGI5ODUxYWU1MAAAAAABoRI_cPCGMzHWRGfLymJKg37WFKnGLkKEMCccK6DEA0Ep8AtX3w&x-canva-quality=thumbnail'
         run: |
-          curl -fL --retry 3 --connect-timeout 20 "$CITY_SOURCE_URL" -o public/assets/city-user.jpg
+          test -s public/file_000000008fa08210975db0e314b77b4d.png
+          mkdir -p public/assets
+          cp public/file_000000008fa08210975db0e314b77b4d.png public/assets/city-user.jpg
           test -s public/assets/city-user.jpg
 
       - name: Normalize city image
