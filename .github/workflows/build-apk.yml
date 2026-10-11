@@ -114,6 +114,18 @@ jobs:
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
 
+      - name: Inspect APK package and signature
+        run: |
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          echo "=== APK package metadata ==="
+          "$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -n 1)/aapt" dump badging "$APK" | head -n 8
+          echo "=== APK signature verification ==="
+          "$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -n 1)/apksigner" verify --verbose "$APK"
+          echo "=== APK file info ==="
+          file "$APK"
+          sha256sum "$APK"
+
       - name: Verify final APK contains the user-provided city image
         run: |
           APK="android/app/build/outputs/apk/debug/app-debug.apk"
