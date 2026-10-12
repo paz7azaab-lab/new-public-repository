@@ -34,7 +34,7 @@ jobs:
       - name: Stamp mobile build version
         env:
           GAME_VERSION: "0.1.0"
-        run: echo '{"game_version":"'$GAME_VERSION'","commit":"${{ github.sha }}","build":${{ github.run_number }}}' > public/version.json
+        run: echo '{"game_version":"'$GAME_VERSION'","commit":"${{ github.sha }}","build":${{ github.run_number}}}' > public/version.json
 
       - name: Install dependencies
         run: npm install
@@ -82,6 +82,20 @@ jobs:
 
       - name: Sync Capacitor
         run: npx cap sync android
+
+      - name: Set stable Android target SDK
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("android/variables.gradle")
+          s = p.read_text()
+          import re
+          updated, count = re.subn(r'targetSdkVersion\s*=\s*\d+', 'targetSdkVersion = 35', s)
+          if count == 0:
+              raise SystemExit("Could not find targetSdkVersion in android/variables.gradle")
+          p.write_text(updated)
+          print("Configured targetSdkVersion = 35")
+          PY
 
       - name: Re-apply landscape orientation after Capacitor sync
         run: |
