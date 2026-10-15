@@ -20,19 +20,6 @@ button{font:inherit}.wrap{width:100%;height:100dvh;max-width:none;margin:0;paddi
 @media(max-width:650px){.resources{font-size:11px;gap:7px}.brand{font-size:12px}.top{align-items:flex-start}.bottom .btn{padding:8px 9px;font-size:12px}}
 
 .profile-pick{position:fixed;inset:0;background:#03080edb;z-index:50;display:none;align-items:center;justify-content:center;padding:18px}.profile-pick.show{display:flex}.profile-card{width:min(760px,96vw);max-height:92vh;overflow:auto;background:linear-gradient(145deg,#182938,#08121b);border:1px solid #c59b53;border-radius:22px;padding:20px;box-shadow:0 25px 80px #000e}.profile-card h2{color:#f3d28d;margin:0 0 6px}.profile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.profile-option{border:1px solid #ffffff1c;background:#0c1721;border-radius:16px;padding:10px;text-align:center;color:#fff;cursor:pointer}.profile-option.selected{border-color:#e0b65f;box-shadow:0 0 0 2px #e0b65f55}.profile-avatar{width:68px;height:68px;margin:auto;border-radius:50%;border:2px solid #c59b53;background:linear-gradient(145deg,#314b62,#111923);display:flex;align-items:center;justify-content:center;font-size:30px;overflow:hidden}.profile-avatar.ariyan{background-image:url('https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5e1ebf60e4fb2011301965b7c1d1b755e0d8e781c67864e6e62e6a8d36766ec2.png');background-size:650px auto;background-position:left top}.profile-option b{display:block;margin-top:7px;color:#f0d59b}.profile-option small{color:#aebbc4}.profile-mini{display:inline-flex;align-items:center;gap:7px;cursor:pointer}.profile-mini .mini-avatar{width:30px;height:30px;border-radius:50%;border:1px solid #c59b53;background:#243746;display:inline-flex;align-items:center;justify-content:center;font-size:14px;overflow:hidden}.profile-mini .mini-avatar.ariyan{background-image:url('https://cdn.openart.ai/openart-uploads/production/attachment-transfers/5e1ebf60e4fb2011301965b7c1d1b755e0d8e781c67864e6e62e6a8d36766ec2.png');background-size:300px auto;background-position:left top}@media(max-width:650px){.profile-grid{grid-template-columns:repeat(2,1fr)}}
-
-/* High-clarity game icon controls inspired by the supplied reference; city artwork remains untouched */
-.icon-rail,.icon-dock{position:absolute;z-index:6;pointer-events:auto;display:flex;gap:8px}
-.icon-rail{flex-direction:column;top:17%;max-height:66%;overflow:visible}
-.left-rail{left:10px}.right-rail{right:10px}
-.icon-dock{bottom:12px;left:50%;transform:translateX(-50%);align-items:flex-end;justify-content:center;max-width:calc(100% - 150px);flex-wrap:nowrap}
-.game-icon{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex:0 0 auto;width:62px;min-height:66px;padding:4px 3px;border:2px solid #d7aa52;border-radius:50% 50% 45% 45%;color:#fff;background:radial-gradient(circle at 32% 22%,#3a4c59 0%,#111a22 58%,#05090d 100%);box-shadow:inset 0 1px 2px #fff7,0 2px 8px #000d,0 0 0 2px #33220c;cursor:pointer;text-shadow:0 1px 3px #000}
-.game-icon span{display:flex;align-items:center;justify-content:center;font-size:29px;line-height:1;filter:drop-shadow(0 2px 1px #000)}
-.game-icon small{font-size:10px;line-height:1.1;font-weight:800;white-space:nowrap;color:#ffe3a2}
-.game-icon:active{transform:scale(.95)}.icon-dock .game-icon{width:68px;min-height:72px}
-@media(max-width:650px){.icon-rail{gap:6px;top:20%}.left-rail{left:5px}.right-rail{right:5px}.game-icon{width:48px;min-height:52px;border-width:1px}.game-icon span{font-size:23px}.game-icon small{font-size:8px}.icon-dock{max-width:calc(100% - 105px);gap:4px;bottom:8px}.icon-dock .game-icon{width:48px;min-height:55px}.icon-dock .game-icon span{font-size:23px}}
-@media(max-width:390px){.icon-dock{max-width:calc(100% - 95px);gap:2px}.icon-dock .game-icon{width:42px;min-height:49px}.icon-dock .game-icon span{font-size:20px}.icon-dock .game-icon small{font-size:7px}}
-
 </style>
 </head>
 <body><div class="wrap"><div class="game">
@@ -44,26 +31,6 @@ button{font:inherit}.wrap{width:100%;height:100dvh;max-width:none;margin:0;paddi
 .brand,.liveBadge,.resources,.phase{display:none!important}
 </style>
 <div class="hud">
-<nav class="icon-rail left-rail" aria-label="منوی پادشاهی">
-<button class="game-icon" data-open="quest" aria-label="مأموریت"><span>📜</span><small>مأموریت‌ها</small></button>
-<button class="game-icon" data-open="alliance" aria-label="اتحاد"><span>🤝</span><small>اتحادها</small></button>
-<button class="game-icon" data-open="hero" aria-label="قهرمان"><span>🛡️</span><small>قهرمان</small></button>
-<button class="game-icon" data-open="world" aria-label="جهان"><span>🗺️</span><small>جهان</small></button>
-<button class="game-icon" data-open="city" aria-label="شهر"><span>🏰</span><small>شهر</small></button>
-</nav>
-<nav class="icon-rail right-rail" aria-label="رویدادها">
-<button class="game-icon" data-open="systems24" aria-label="رویدادها"><span>👑</span><small>رویدادها</small></button>
-<button class="game-icon" data-open="shop" aria-label="فروشگاه"><span>🎁</span><small>پاداش</small></button>
-<button class="game-icon" data-open="features" aria-label="فصل جدید"><span>🏅</span><small>فصل جدید</small></button>
-</nav>
-<nav class="icon-dock" aria-label="ابزارهای بازی">
-<button class="game-icon" data-open="combat" aria-label="جنگ"><span>⚔️</span><small>جنگ</small></button>
-<button class="game-icon" data-open="city" aria-label="توسعه"><span>🔨</span><small>توسعه</small></button>
-<button class="game-icon" data-open="systems24" aria-label="دانشگاه"><span>🏛️</span><small>دانشگاه</small></button>
-<button class="game-icon" data-open="hero" aria-label="سواره‌نظام"><span>🐎</span><small>نیروها</small></button>
-<button class="game-icon" data-open="shop" aria-label="گنجینه"><span>🧰</span><small>گنجینه</small></button>
-<button class="game-icon" data-open="hero" aria-label="قهرمانان"><span>👑</span><small>قهرمانان</small></button>
-</nav>
 <div class="top">
 <div class="brand"><span class="profile-mini" id="profileMini"><span class="mini-avatar" id="miniAvatar">👑</span><span id="profileName">KingAriyan</span></span> <span style="font-weight:400">• ASHEN REALMS</span></div>
 <div class="resources"><span>🪵 <b id="wood">1200</b></span><span>🪨 <b id="stone">900</b></span><span>⛏️ <b id="iron">600</b></span><span>🌾 <b id="food">1500</b></span><span>💰 <b id="gold">320</b></span><span>⭐ <b id="honor">0</b></span></div>
