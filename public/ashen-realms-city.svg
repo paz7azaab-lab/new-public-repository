@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 864" role="img" aria-label="Fantasy kingdom of Ashen Realms">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#142d5b"/><stop offset=".45" stop-color="#e37d65"/><stop offset="1" stop-color="#f4c47b"/></linearGradient>
+ <linearGradient id="water" x2="0" y2="1"><stop stop-color="#376c83"/><stop offset="1" stop-color="#101e3b"/></linearGradient>
+ <linearGradient id="stone" x2="0" y2="1"><stop stop-color="#e5c89a"/><stop offset="1" stop-color="#66546a"/></linearGradient>
+ <linearGradient id="roof" x2="0" y2="1"><stop stop-color="#55d6d1"/><stop offset="1" stop-color="#1c5479"/></linearGradient>
+ <radialGradient id="sun"><stop stop-color="#fff3bf"/><stop offset="1" stop-color="#f3a66b" stop-opacity="0"/></radialGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="12"/></filter>
+ <pattern id="brick" width="42" height="22" patternUnits="userSpaceOnUse"><path d="M0 0H42M0 11H42M21 0V11M0 11V22" fill="none" stroke="#3a3149" stroke-opacity=".35" stroke-width="2"/></pattern>
+</defs>
+<rect width="1536" height="864" fill="url(#sky)"/>
+<circle cx="1155" cy="205" r="190" fill="url(#sun)"/><circle cx="1155" cy="205" r="70" fill="#ffe6a1" opacity=".9"/>
+<g fill="#f8d5bc" opacity=".35"><path d="M0 200Q170 120 310 190T610 175T900 185T1230 150T1536 175V235H0Z"/><path d="M0 270Q210 220 390 260T800 245T1200 265T1536 230V300H0Z"/></g>
+<path d="M0 390L150 230 270 360 430 200 590 370 750 225 930 370 1100 220 1260 365 1400 250 1536 365V550H0Z" fill="#524c78" opacity=".85"/>
+<path d="M0 450L190 320 360 430 540 300 710 435 900 315 1080 440 1270 305 1450 430 1536 370V600H0Z" fill="#293c62"/>
+<path d="M0 540Q230 490 440 540T840 525T1200 540T1536 510V864H0Z" fill="url(#water)"/>
+<path d="M0 660Q250 600 450 665T900 640T1300 660T1536 620" fill="none" stroke="#8bd4d2" stroke-opacity=".35" stroke-width="8"/>
+<g opacity=".85" fill="#24344c"><path d="M90 500L140 380 190 500Z"/><path d="M230 510L300 350 370 510Z"/><path d="M1180 505L1240 360 1300 505Z"/><path d="M1340 500L1410 335 1480 500Z"/></g>
+<!-- monumental cliff island -->
+<path d="M260 570L330 455 440 420 540 390 670 420 780 390 900 430 1010 475 1100 575 1060 660 300 660Z" fill="#4c465f"/>
+<path d="M330 510L405 445 525 425 630 450 750 420 860 455 975 500 1040 570 1010 620 340 620Z" fill="url(#stone)"/>
+<path d="M330 510L405 445 525 425 630 450 750 420 860 455 975 500 1040 570 1010 620 340 620Z" fill="url(#brick)"/>
+<!-- central castle -->
+<g stroke="#55445a" stroke-width="5" stroke-linejoin="round">
+ <path d="M535 535V330H610V295H650V330H710V535Z" fill="url(#stone)"/>
+ <path d="M650 535V260H715V225H750V260H805V535Z" fill="#d9b58c"/>
+ <path d="M805 535V335H870V300H905V335H960V535Z" fill="url(#stone)"/>
+ <path d="M510 365L570 315 630 365Z" fill="url(#roof)"/><path d="M630 285L680 205 730 285Z" fill="url(#roof)"/><path d="M785 365L835 315 885 365Z" fill="url(#roof)"/>
+ <path d="M715 535V395Q750 350 785 395V535Z" fill="#27354b"/>
+ <path d="M570 535V425Q590 390 610 425V535Z" fill="#27354b"/><path d="M860 535V425Q880 390 900 425V535Z" fill="#27354b"/>
+ <path d="M680 225V165H688V225M747 225V165H755V225" fill="#c8a56e" stroke="none"/>
+ <path d="M682 168L690 148 698 168Z" fill="#f2d59a" stroke="none"/>
+</g>
+<!-- outer towers and colorful roofs -->
+<g stroke="#54445b" stroke-width="5" stroke-linejoin="round">
+ <path d="M395 585V420H455V585Z" fill="#cbb08c"/><path d="M380 425L425 355 470 425Z" fill="#cf7167"/>
+ <path d="M980 585V420H1040V585Z" fill="#cbb08c"/><path d="M965 425L1010 355 1055 425Z" fill="#cf7167"/>
+ <path d="M280 605V495H330V605Z" fill="#bfa080"/><path d="M268 500L305 440 342 500Z" fill="#57b9bc"/>
+ <path d="M1100 605V495H1150V605Z" fill="#bfa080"/><path d="M1088 500L1125 440 1162 500Z" fill="#57b9bc"/>
+</g>
+<!-- windows -->
+<g fill="#ffdb8a" stroke="#6b4b58" stroke-width="3"><path d="M570 385Q590 355 610 385V415H570Z"/><path d="M665 330Q682 305 699 330V365H665Z"/><path d="M730 315Q750 285 770 315V350H730Z"/><path d="M820 385Q840 355 860 385V415H820Z"/><path d="M415 460Q425 442 435 460V480H415Z"/><path d="M1000 460Q1010 442 1020 460V480H1000Z"/></g>
+<!-- bridges and roads -->
+<path d="M520 570Q750 620 980 570L1010 620Q750 680 490 620Z" fill="#c6a57e" stroke="#5c4b60" stroke-width="6"/>
+<path d="M640 625L670 680 690 730 720 780" fill="none" stroke="#d5b58b" stroke-width="22" stroke-linecap="round"/>
+<path d="M640 625L670 680 690 730 720 780" fill="none" stroke="#fff0bf" stroke-opacity=".25" stroke-width="5"/>
+<!-- foreground cliffs and tiny houses -->
+<path d="M0 700L170 645 330 690 470 660 610 720 760 675 900 710 1060 665 1220 710 1380 665 1536 700V864H0Z" fill="#172c46"/>
+<g stroke="#3d3a54" stroke-width="4" stroke-linejoin="round">
+ <path d="M140 760V680H205V760Z" fill="#b58d7c"/><path d="M128 685L172 630 217 685Z" fill="#d97965"/>
+ <path d="M250 790V700H315V790Z" fill="#c9a68a"/><path d="M238 705L282 650 327 705Z" fill="#3ba8ad"/>
+ <path d="M1000 785V690H1070V785Z" fill="#c9a68a"/><path d="M988 695L1035 635 1082 695Z" fill="#d97965"/>
+ <path d="M1150 760V670H1215V760Z" fill="#b58d7c"/><path d="M1138 675L1182 620 1227 675Z" fill="#3ba8ad"/>
+ <path d="M1320 795V710H1385V795Z" fill="#c9a68a"/><path d="M1308 715L1352 660 1397 715Z" fill="#d97965"/>
+</g>
+<g fill="#ffe2a0" opacity=".8"><circle cx="180" cy="720" r="5"/><circle cx="285" cy="740" r="5"/><circle cx="1035" cy="730" r="5"/><circle cx="1180" cy="710" r="5"/><circle cx="1350" cy="745" r="5"/></g>
+<!-- magical motes -->
+<g fill="#fff0b4"><circle cx="455" cy="330" r="4"/><circle cx="520" cy="280" r="3"/><circle cx="900" cy="275" r="4"/><circle cx="1040" cy="350" r="3"/><circle cx="755" cy="190" r="4"/><circle cx="365" cy="395" r="3"/></g>
+<rect width="1536" height="864" fill="none" stroke="#f0c77f" stroke-opacity=".35" stroke-width="12"/>
+</svg>
